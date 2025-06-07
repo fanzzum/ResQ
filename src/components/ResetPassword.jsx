@@ -14,7 +14,12 @@ const ResetPassword = () => {
       const res = await fetch('https://xylem-api.ra-physics.space/rest-auth/password/reset/confirm/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid, token, new_password1: password1, new_password2: password2 })
+        body: JSON.stringify({
+          uid,
+          token,
+          new_password1: password1,
+          new_password2: password2
+        })
       })
 
       if (res.ok) {
