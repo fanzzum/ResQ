@@ -7,21 +7,16 @@ import SignUp from "./components/SignUp"
 import LogIn from "./components/LogIn"
 import ForgotPassword from "./components/ForgotPassword"
 import ResetPassword from "./components/ResetPassword"
+import LandingPage from "./components/LandingPage"
 
 function App() {
   return (
     <>
       <Navbar />
-
       <Routes>
         <Route path="/" element={
           <>
-            <MissingCard />
-            <MissingReport />
-            <SignUp />
-            <LogIn />
-            <ForgotPassword />
-            <ResetPassword />
+            <LandingPage/>
           </>
         } />
         <Route path="/signup" element={<SignUp />} />
