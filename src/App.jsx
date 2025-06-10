@@ -8,7 +8,7 @@ import LogIn from "./components/LogIn"
 import ForgotPassword from "./components/ForgotPassword"
 import ResetPassword from "./components/ResetPassword"
 import LandingPage from "./components/LandingPage"
-
+import AskAi from "./components/AskAi"
 function App() {
   return (
     <>
