@@ -17,7 +17,7 @@ const LogIn = () => {
 
     try {
       const res = await axios.post(
-        '{{base_url}}rest-auth/login/',
+        'https://xylem-api.ra-physics.space/rest-auth/login/',
         {
           username: email,  // rest-auth expects 'username' even if you use email login
           password,
