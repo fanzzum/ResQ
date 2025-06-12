@@ -19,7 +19,7 @@ const LogIn = () => {
       const res = await axios.post(
         'https://xylem-api.ra-physics.space/rest-auth/login/',
         {
-          username: email,  // rest-auth expects 'username' even if you use email login
+          username: email,
           password,
         },
         {
@@ -28,7 +28,7 @@ const LogIn = () => {
       );
 
       const data = res.data;
-      if (data.key) {  // rest-auth returns a token key on successful login
+      if (data.key) {
         localStorage.setItem('token', data.key);
         navigate('/');
       } else {
@@ -36,10 +36,18 @@ const LogIn = () => {
       }
     } catch (err) {
       console.error('Login error:', err);
-      const msg = err.response?.data?.non_field_errors?.[0] || 'Invalid credentials or server error';
-      alert(msg);
+
+      // Check for email verification error specifically
+      const errMsg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || 'Invalid credentials or server error';
+
+      if (errMsg.toLowerCase().includes('email is not verified')) {
+        alert('Your email is not verified. Please verify your email before logging in.');
+      } else {
+        alert(errMsg);
+      }
     }
-  }
+  };
+
 
   return (
     <form onSubmit={handleSubmit}>
