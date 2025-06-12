@@ -8,7 +8,9 @@ import LogIn from "./components/LogIn"
 import ForgotPassword from "./components/ForgotPassword"
 import ResetPassword from "./components/ResetPassword"
 import LandingPage from "./components/LandingPage"
-import AskAi from "./components/AskAi"
+import Footer from "./components/Footer"
+import SdgMeet from "./components/SdgMeet"
+import HowToReport from "./components/HowToReport"
 function App() {
   return (
     <>
@@ -17,6 +19,8 @@ function App() {
         <Route path="/" element={
           <>
             <LandingPage/>
+  
+            
           </>
         } />
         <Route path="/signup" element={<SignUp />} />
@@ -26,6 +30,7 @@ function App() {
         <Route path="/auth/password/reset/confirm/:uid/:token" element={<ResetPassword />} />
 
       </Routes>
+      <Footer/>
     </>
   )
 }

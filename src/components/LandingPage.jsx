@@ -8,6 +8,9 @@ import boat from '../assets/pictures/boat.png'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import AskAi from './AskAi'
+import HelpStartsWithaTap from '../components/HelpStartsWithATap'
+import HowToReport from './HowToReport'
+import SdgMeet from './SdgMeet'
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -29,10 +32,8 @@ const LandingPage = () => {
   const sunY = useTransform(scrollYProgress, [0.9, 1], [0, -50])
   const sunOpacity = useTransform(scrollYProgress, [0.9, 1], [0, 1])
 
-  // Modified threshold from 0.9 to 0.8 for earlier interaction
   const askAiOpacity = useTransform(scrollYProgress, [0.8, 0.9], [0, 1])
 
-  // Add this useMotionValueEvent hook
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setCanInteract(latest > 0.85)
   })
@@ -51,7 +52,6 @@ const LandingPage = () => {
 
   return (
     <div className="relative">
-      {/* Parallax section */}
       <div ref={scrollRef} className="relative h-[600vh]">
         <div className="sticky top-0 h-screen overflow-hidden">
           <motion.img
@@ -86,10 +86,11 @@ const LandingPage = () => {
           />
           <motion.img
             src={bgwater}
-            className="absolute w-full scale-150 z-0"
+            className="absolute w-full bottom-0 z-0"
             style={{
+              scaleX: 1,
+              scaleY: 1.5,
               opacity: useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 0.3, 1]),
-              scale,
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -118,7 +119,6 @@ const LandingPage = () => {
           >
             <AskAi />
           </motion.div>
-          {/* Boat */}
           <motion.img
             src={boat}
             className="absolute z-40 w-[681px] bottom-0"
@@ -134,8 +134,12 @@ const LandingPage = () => {
           />
         </div>
       </div>
+      <HelpStartsWithaTap />
+      <HowToReport/>
+      <SdgMeet/>
     </div>
   )
 }
 
 export default LandingPage
+
