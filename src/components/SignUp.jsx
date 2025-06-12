@@ -24,47 +24,45 @@ const SignUp = () => {
     )
   }, [])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (!email || !password1 || !password2 || !name || !phone || !address) {
-      alert('All fields are required');
-      return;
-    }
+// ...
 
-    if (password1 !== password2) {
-      alert('Passwords do not match');
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch('https://xylem-api.ra-physics.space/volunteer/registration/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          address,
-          latitude,
-          longitude,
-          password1,
-          password2,
-        }),
-      });
+  if (!email || !password1 || !password2 || !name || !phone || !address) {
+    alert('All fields are required');
+    return;
+  }
 
-      const data = await res.json();
-      if (res.ok) {
-        alert('Signup successful! Please check your email to verify your account before logging in.');
-        navigate('/login');
-      } else {
-        alert(data?.message || data?.error || 'Signup failed');
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
+  if (password1 !== password2) {
+    alert('Passwords do not match');
+    return;
+  }
+
+  try {
+    const res = await axios.post('https://xylem-api.ra-physics.space/volunteer/registration/', {
+      name,
+      email,
+      phone,
+      address,
+      latitude,
+      longitude,
+      password1,
+      password2,
+    });
+
+    alert('Signup successful! Please check your email to verify your account before logging in.');
+    navigate('/login');
+  } catch (err) {
+    console.error('Signup error:', err);
+    if (err.response?.data) {
+      alert(JSON.stringify(err.response.data));
+    } else {
       alert('Network error or server down');
     }
-  };
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className='flex items-center p-10'>

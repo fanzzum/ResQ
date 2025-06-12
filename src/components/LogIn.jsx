@@ -16,31 +16,28 @@ const LogIn = () => {
     }
 
     try {
-      const res = await axios.post('https://xylem-api.ra-physics.space/get-access-token/', {
-        username: email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
+      const res = await axios.post(
+        '{{base_url}}rest-auth/login/',
+        {
+          username: email,  // rest-auth expects 'username' even if you use email login
+          password,
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
         }
-      });
+      );
 
       const data = res.data;
-      if (data.access && data.refresh) {
-        localStorage.setItem('access', data.access);
-        localStorage.setItem('refresh', data.refresh);
+      if (data.key) {  // rest-auth returns a token key on successful login
+        localStorage.setItem('token', data.key);
         navigate('/');
       } else {
-        alert('Invalid login response');
+        alert('Login failed: No token received');
       }
     } catch (err) {
       console.error('Login error:', err);
-      if (err.response?.status === 401) {
-        alert('Please verify your email before logging in. Check your email inbox and click the verification link.');
-      } else {
-        const msg = err.response?.data?.detail || 'Invalid credentials or server error';
-        alert(msg);
-      }
+      const msg = err.response?.data?.non_field_errors?.[0] || 'Invalid credentials or server error';
+      alert(msg);
     }
   }
 
@@ -78,7 +75,7 @@ const LogIn = () => {
             Next
           </button>
           <p className='ml-60 font-poppins font-[400] text-[20px] text-[#1D3557]'>
-            New here? <a className='font-[700]'>Sign Up</a>
+            New here? <Link to="/signup" className='font-[700]'>Sign Up</Link>
           </p>
         </div>
         <div>
@@ -92,4 +89,3 @@ const LogIn = () => {
 }
 
 export default LogIn
-
