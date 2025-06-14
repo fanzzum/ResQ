@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        const res = await fetch('https://your-backend-url.com/rest-auth/registration/account-confirm-email/', {
+        const res = await fetch('https://xylem-api.ra-physics.space/rest-auth/registration/account-confirm-email/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
