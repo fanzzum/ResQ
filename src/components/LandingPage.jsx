@@ -11,7 +11,7 @@ import AskAi from './AskAi'
 import HelpStartsWithaTap from '../components/HelpStartsWithATap'
 import HowToReport from './HowToReport'
 import SdgMeet from './SdgMeet'
-
+import RestLanding from './RestLanding'
 const LandingPage = () => {
   const navigate = useNavigate()
   const scrollRef = useRef(null)
@@ -137,6 +137,8 @@ const LandingPage = () => {
       <HelpStartsWithaTap />
       <HowToReport/>
       <SdgMeet/>
+      <RestLanding/>
+
     </div>
   )
 }
