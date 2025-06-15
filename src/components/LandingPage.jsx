@@ -86,7 +86,7 @@ const LandingPage = () => {
           />
           <motion.img
             src={bgwater}
-            className="absolute w-full bottom-0 z-0"
+            className="absolute w-full bottom-5 z-0"
             style={{
               scaleX: 1,
               scaleY: 1.5,
