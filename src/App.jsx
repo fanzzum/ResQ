@@ -11,6 +11,8 @@ import LandingPage from "./components/LandingPage"
 import Footer from "./components/Footer"
 import MissingReportScreen from "./components/MissingReportScreen"
 import VerifyEmail from "./components/VerifyEmail"
+import MissingCardDetails from "./components/MissingCardDetails"
+import ReportScreen from "./components/ReportScreen"
 function App() {
   return (
     <>
@@ -18,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-            <MissingReportScreen/>
+            <LandingPage/>
   
 
           </>
@@ -29,6 +31,8 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/auth/password/reset/confirm/:uid/:token" element={<ResetPassword />} />
         <Route path="/auth/email/confirm/:key" element={<VerifyEmail />} />
+        <Route path="/report" element={<MissingReportScreen/>} />
+        <Route path="/records" element={<ReportScreen/>} />
 
       </Routes>
       <Footer/>

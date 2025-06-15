@@ -25,45 +25,46 @@ const SignUp = () => {
     )
   }, [])
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-// ...
+    if (!email || !password1 || !password2) {
+      alert('All fields are required')
+      return
+    }
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    try {
+      const res = await axios.post(
+        'https://xylem-api.ra-physics.space/volunteer/registration/',
+        {
+          email,
+          password1,
+          password2,
+          name,
+          phone,
+          address,
+          latitude,
+          longitude
+        },
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
 
-  if (!email || !password1 || !password2 || !name || !phone || !address) {
-    alert('All fields are required');
-    return;
-  }
+      console.log('Signup response:', res.data) // For debugging
 
-  if (password1 !== password2) {
-    alert('Passwords do not match');
-    return;
-  }
-
-  try {
-    const res = await axios.post('https://xylem-api.ra-physics.space/volunteer/registration/', {
-      name,
-      email,
-      phone,
-      address,
-      latitude,
-      longitude,
-      password1,
-      password2,
-    });
-
-    alert('Signup successful! Please check your email to verify your account before logging in.');
-    navigate('/login');
-  } catch (err) {
-    console.error('Signup error:', err);
-    if (err.response?.data) {
-      alert(JSON.stringify(err.response.data));
-    } else {
-      alert('Network error or server down');
+      if (res.status === 200 || res.status === 201) {
+        alert('Signup successful! Please check your email to verify your account.')
+        navigate('/login')
+      }
+    } catch (err) {
+      console.error('Signup error:', err.response || err)
+      const errMsg = err.response?.data?.detail || 
+                    err.response?.data?.message || 
+                    'Signup failed'
+      alert(errMsg)
     }
   }
-};
 
   return (
     <form onSubmit={handleSubmit} className='flex items-center p-10'>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import signUp from '../assets/icons/signUp.png'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 const LogIn = () => {
@@ -9,45 +8,44 @@ const LogIn = () => {
   const [password, setPassword] = useState('')
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      alert("Both fields required");
-      return;
-    }
+    e.preventDefault()
 
     try {
       const res = await axios.post(
         'https://xylem-api.ra-physics.space/rest-auth/login/',
         {
-          username: email,
-          password,
+          email: email, // Ensure you're sending 'email' and 'password'
+          password: password
         },
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json' }
         }
-      );
+      )
 
-      const data = res.data;
-      if (data.key) {
-        localStorage.setItem('token', data.key);
-        navigate('/');
+      console.log('Login response:', res.data) // Debugging
+
+      if (res.data.access && res.data.refresh) {
+        // Store tokens in localStorage
+        localStorage.setItem('access', res.data.access)
+        localStorage.setItem('refresh', res.data.refresh)
+
+        // Optionally store user details
+        localStorage.setItem('user', JSON.stringify(res.data.user))
+        localStorage.setItem('role', res.data.role)
+
+        alert('Login successful!')
+        navigate('/') // Redirect to home page
       } else {
-        alert('Login failed: No token received');
+        alert('Login failed: No token received')
       }
     } catch (err) {
-      console.error('Login error:', err);
-
-      // Check for email verification error specifically
-      const errMsg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || 'Invalid credentials or server error';
-
-      if (errMsg.toLowerCase().includes('email is not verified')) {
-        alert('Your email is not verified. Please verify your email before logging in.');
-      } else {
-        alert(errMsg);
-      }
+      console.error('Login error:', err.response || err)
+      const errMsg = err.response?.data?.detail || 
+                     err.response?.data?.non_field_errors?.[0] || 
+                     'Invalid credentials or server error'
+      alert(errMsg)
     }
-  };
-
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -71,9 +69,6 @@ const LogIn = () => {
               onChange={e => setPassword(e.target.value)}
               className='input-style2 font-poppins text-[20px] font-[275]'
             />
-          </div>
-          <div>
-            <img src={signUp} />
           </div>
         </div>
         <div className='flex'>

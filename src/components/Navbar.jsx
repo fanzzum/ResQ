@@ -14,9 +14,9 @@ const Navbar = () => {
     placeholder:leading-[100%]
     placeholder:tracking-[0]
     placeholder:pl-[29px]"></input>
-    <Link className="font-[300] text-[24px] font-inter text-white" to="/">Records</Link>
+    <Link className="font-[300] text-[24px] font-inter text-white" to="/records">Records</Link>
     <Link className="font-[300] text-[24px] font-inter text-white">Map</Link>
-    <Link className="font-[300] text-[24px] font-inter text-white">Report</Link>
+    <Link className="font-[300] text-[24px] font-inter text-white" to="/report">Report</Link>
     <Link className="font-[300] text-[24px] font-inter text-white" to="/login">Log In</Link>
     <Link className="w-[109px] h-[42px] rounded-[8px] text-white font-[inter] font-normal shadow-[0px_0px_10px_0px_#65C0ED80] text-[20px] bg-[linear-gradient(0deg,#165179,#2E5E7F,#5F8BA7)] justify-center flex items-center" to="/signup">Sign Up</Link>
     </nav>

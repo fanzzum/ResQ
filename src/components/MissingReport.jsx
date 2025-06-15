@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import cam from '../assets/icons/cam.png'
 
-const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload'
-const CLOUDINARY_UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET'
+const IMGBB_URL = 'https://api.imgbb.com/1/upload'
+const IMGBB_API_KEY = 'd4201688c3da225177b6b8ca11a3a624'
 
 const MissingReport = () => {
   const [formData, setFormData] = useState({
@@ -43,17 +43,19 @@ const MissingReport = () => {
     }
   }
 
-  const uploadToCloudinary = async (file) => {
-    const data = new FormData()
-    data.append('file', file)
-    data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+  const uploadToImgBB = async (file) => {
+    const formData = new FormData()
+    formData.append('image', file)
+    formData.append('key', IMGBB_API_KEY)
 
-    const res = await fetch(CLOUDINARY_URL, {
+    const res = await fetch(IMGBB_URL, {
       method: 'POST',
-      body: data,
+      body: formData,
     })
-    const json = await res.json()
-    return json.secure_url
+
+    const data = await res.json()
+    if (!data.success) throw new Error('ImgBB upload failed')
+    return data.data.url
   }
 
   const handleSubmit = async () => {
@@ -62,7 +64,7 @@ const MissingReport = () => {
 
       for (const key of ['photo_url1', 'photo_url2', 'photo_url3']) {
         if (formData[key]) {
-          const url = await uploadToCloudinary(formData[key])
+          const url = await uploadToImgBB(formData[key])
           uploadedUrls[key] = url
         } else {
           uploadedUrls[key] = ''
@@ -105,7 +107,7 @@ const MissingReport = () => {
 
   return (
     <div
-      className='flex justify-center w-[1286px] h-[1600px] rounded-[38px] bg-[#e8e8e8] pt-10 '
+      className='flex justify-center w-[1286px] h-[1600px] rounded-[38px] bg-[#e8e8e8] pt-10 overflow-y-auto'
       style={{ boxShadow: 'inset -6px -7px 4px 0px #00000040' }}
     >
       <div className='flex flex-col flex-1 p-10 gap-8'>
@@ -168,3 +170,4 @@ const MissingReport = () => {
 }
 
 export default MissingReport
+
