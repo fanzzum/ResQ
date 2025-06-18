@@ -2,7 +2,7 @@ import React from 'react'
 import girl from '../assets/pictures/girl.png'
 const HelpStartsWithATap = () => {
   return (
-    <div className='w-360 h-256  bg-[linear-gradient(180deg,#3689bd,#35719A,#4A85AD,#5B98C1)] flex justify-center items-center'>
+    <div className='w-full h-[100vh]  bg-[linear-gradient(180deg,#3689bd,#35719A,#4A85AD,#5B98C1)] flex justify-center items-center'>
         <div className='bg-[#5F5E5E10] rounded-[95px] w-341 h-180 border-[3px] border-[#ffffff10] flex items-center relative'>
             <div className=' p-22 absolute'>
                 <p className='font-poppins font-[700] text-[60px] text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#F2DF65] inline-block'>Help starts with a tap</p>

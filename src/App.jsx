@@ -13,6 +13,8 @@ import MissingReportScreen from "./components/MissingReportScreen"
 import VerifyEmail from "./components/VerifyEmail"
 import MissingCardDetails from "./components/MissingCardDetails"
 import ReportScreen from "./components/ReportScreen"
+import LogInScreen from "./components/LogInScreen"
+import SignUpScreen from "./components/SignUpScreen"
 function App() {
   return (
     <>
@@ -25,8 +27,8 @@ function App() {
 
           </>
         } />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} />
+        <Route path="/signup" element={<SignUpScreen />} />
+        <Route path="/login" element={<LogInScreen />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/auth/password/reset/confirm/:uid/:token" element={<ResetPassword />} />

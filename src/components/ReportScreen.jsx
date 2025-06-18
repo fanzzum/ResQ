@@ -81,7 +81,7 @@ const ReportScreen = () => {
           onClick={() => setSelectedReport(null)}
         >
           <div
-            className="bg-white p-6 rounded-2xl max-h-[90vh] overflow-y-auto"
+            className="bg-[#ffffff70]  rounded-[57px] max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <MissingCardDetails data={selectedReport} />

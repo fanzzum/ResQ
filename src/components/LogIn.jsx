@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
-
+import signup from '../assets/icons/signUp.png'
 const LogIn = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -70,6 +70,7 @@ const LogIn = () => {
               className='input-style2 font-poppins text-[20px] font-[275]'
             />
           </div>
+          <img src={signup} className='w-1/2'/>
         </div>
         <div className='flex'>
           <button

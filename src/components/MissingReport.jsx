@@ -58,52 +58,77 @@ const MissingReport = () => {
     return data.data.url
   }
 
-  const handleSubmit = async () => {
-    try {
-      const uploadedUrls = {}
-
-      for (const key of ['photo_url1', 'photo_url2', 'photo_url3']) {
-        if (formData[key]) {
-          const url = await uploadToImgBB(formData[key])
-          uploadedUrls[key] = url
-        } else {
-          uploadedUrls[key] = ''
-        }
-      }
-
-      const payload = {
-        reporter_name: formData.reporter_name,
-        reporter_contact: formData.reporter_contact,
-        reporter_location: formData.reporter_location,
-        note: formData.note,
-        name: formData.name,
-        age: formData.age,
-        gender: formData.gender,
-        clothing_description: formData.clothing_description,
-        last_seen_location: formData.last_seen_location,
-        last_seen_datetime: new Date(
-          formData.last_seen_datetime_date + 'T' + formData.last_seen_datetime_time
-        ).toISOString(),
-        photo_url1: uploadedUrls.photo_url1,
-        photo_url2: uploadedUrls.photo_url2,
-        photo_url3: uploadedUrls.photo_url3,
-      }
-
-      const res = await fetch('https://xylem-api.ra-physics.space/administrator/missing-reports/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-
-      const result = await res.json()
-      if (!res.ok) throw new Error(result.message || 'Submission failed')
-      alert('Report submitted successfully')
-    } catch (err) {
-      alert('Error: ' + err.message)
+const geocode = async (location) => {
+  if (!location) return { lat: '', lng: '' }
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'YourAppNameHere' } })
+    const data = await res.json()
+    if (data && data.length > 0) {
+      return { lat: data[0].lat, lng: data[0].lon }
     }
+  } catch (e) {
+    // fail silently
   }
+  return { lat: '', lng: '' }
+}
+
+const handleSubmit = async () => {
+  try {
+    // Upload photos first
+    const uploadedUrls = {}
+    for (const key of ['photo_url1', 'photo_url2', 'photo_url3']) {
+      if (formData[key]) {
+        const url = await uploadToImgBB(formData[key])
+        uploadedUrls[key] = url
+      } else {
+        uploadedUrls[key] = ''
+      }
+    }
+
+    // Geocode locations
+    const reporterCoords = await geocode(formData.reporter_location)
+    const lastSeenCoords = await geocode(formData.last_seen_location)
+
+    // Build payload with lat/lng
+    const payload = {
+      reporter_name: formData.reporter_name,
+      reporter_contact: formData.reporter_contact,
+      reporter_location: formData.reporter_location,
+      reporter_lat: reporterCoords.lat,
+      reporter_lng: reporterCoords.lng,
+      note: formData.note,
+      name: formData.name,
+      age: formData.age,
+      gender: formData.gender,
+      clothing_description: formData.clothing_description,
+      last_seen_location: formData.last_seen_location,
+      last_seen_lat: lastSeenCoords.lat,
+      last_seen_lng: lastSeenCoords.lng,
+      last_seen_datetime: new Date(
+        formData.last_seen_datetime_date + 'T' + formData.last_seen_datetime_time
+      ).toISOString(),
+      photo_url1: uploadedUrls.photo_url1,
+      photo_url2: uploadedUrls.photo_url2,
+      photo_url3: uploadedUrls.photo_url3,
+    }
+
+    const res = await fetch('https://xylem-api.ra-physics.space/administrator/missing-reports/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const result = await res.json()
+    if (!res.ok) throw new Error(result.message || 'Submission failed')
+    alert('Report submitted successfully')
+  } catch (err) {
+    alert('Error: ' + err.message)
+  }
+}
+
 
   return (
     <div
