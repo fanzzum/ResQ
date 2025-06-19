@@ -26,14 +26,18 @@ const MissingCardDetails = ({ data }) => {
   }
 
   return (
-    <div className='w-330 h-340 bg-[#B9B9B985] rounded-[57px] p-15 gap-20 font-inter flex flex-col'>
+    <div className="bg-[#94949495] rounded-[3.5rem] p-6 flex flex-col gap-5 max-w-md w-full max-h-[90vh] overflow-y-auto font-inter">
       {/* Reporter Section */}
-      <div className='flex p-15 gap-8'>
-        <img alt='reporter' src={photo_url1 || cam} className='w-81 h-81 object-cover rounded-full' />
-        <div className='flex flex-col gap-3'>
-          <p className='font-[400] text-[40px]'>{name}</p>
-          <p className='italic font-[200]'>{formatDate(last_seen_datetime)}</p>
-          <div className="grid grid-cols-[170px_8px_1fr] gap-x-2 gap-y-2 font-[400] text-[20px] items-center">
+      <div className="flex gap-4 p-4">
+        <img
+          alt="reporter"
+          src={photo_url1 || cam}
+          className="w-30 h-30 object-cover rounded-[20px] flex-shrink-0"
+        />
+        <div className="flex flex-col gap-1 flex-grow">
+          <p className="font-[400] text-2xl">{name}</p>
+          <p className="italic font-[200] text-sm">{formatDate(last_seen_datetime)}</p>
+          <div className="grid grid-cols-[5fr_1fr_6fr] gap-x-1 gap-y-1 font-[400] text-sm items-center">
             <div>Approximate age</div><div>:</div><div>{age}</div>
             <div>Gender</div><div>:</div><div>{gender}</div>
             <div>Clothing</div><div>:</div><div>{clothing_description}</div>
@@ -43,17 +47,25 @@ const MissingCardDetails = ({ data }) => {
       </div>
 
       {/* Note */}
-      <div className='flex font-poppins font-[400] gap-10'>
-        <p className='text-[24px]'>Note:</p>
-        <input className='bg-white w-245 h-25' value={note || ''} readOnly />
+      <div className="flex font-poppins font-[400] gap-3 items-center">
+        <p className="text-lg flex-shrink-0">Note:</p>
+        <input
+          className="bg-white flex-grow h-6 rounded px-2"
+          value={note || ''}
+          readOnly
+        />
       </div>
 
       {/* Rescuer Info */}
-      <p className='font-[500] text-[32px]'>Rescuer’s Information</p>
-      <div className='flex p-15 gap-8'>
-        <img alt='rescuer' src={cam} className='w-81 h-81 object-cover rounded-full' />
-        <div className='flex flex-col gap-3'>
-          <div className="grid grid-cols-[170px_8px_1fr] gap-x-2 gap-y-2 pt-15 font-[400] text-[20px] items-center">
+      <p className="font-[500] text-xl mt-4">Rescuer’s Information</p>
+      <div className="flex gap-4 p-4">
+        <img
+          alt="rescuer"
+          src={cam}
+          className="w-20 h-20 object-cover rounded-full flex-shrink-0"
+        />
+        <div className="flex flex-col gap-1 flex-grow">
+          <div className="grid grid-cols-[5fr_1fr_6fr] gap-x-1 gap-y-1 pt-4 font-[400] text-sm items-center">
             <div>Name</div><div>:</div><div>{reporter_name || 'Unknown'}</div>
             <div>Contact</div><div>:</div><div>{reporter_contact || 'Unknown'}</div>
             <div>Organization</div><div>:</div><div>{reporter_location || 'Unknown'}</div>

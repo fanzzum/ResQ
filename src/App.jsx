@@ -1,4 +1,5 @@
 import React from "react"
+import 'leaflet/dist/leaflet.css'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from "./components/Navbar"
 import MissingCard from "./components/MissingCard"
@@ -15,6 +16,7 @@ import MissingCardDetails from "./components/MissingCardDetails"
 import ReportScreen from "./components/ReportScreen"
 import LogInScreen from "./components/LogInScreen"
 import SignUpScreen from "./components/SignUpScreen"
+import MapViewScreen from "./components/MapViewScreen"
 function App() {
   return (
     <>
@@ -35,6 +37,7 @@ function App() {
         <Route path="/auth/email/confirm/:key" element={<VerifyEmail />} />
         <Route path="/report" element={<MissingReportScreen/>} />
         <Route path="/records" element={<ReportScreen/>} />
+        <Route path="/map" element={<MapViewScreen/>} />
 
       </Routes>
       <Footer/>

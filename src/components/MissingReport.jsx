@@ -58,83 +58,54 @@ const MissingReport = () => {
     return data.data.url
   }
 
-const geocode = async (location) => {
-  if (!location) return { lat: '', lng: '' }
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'YourAppNameHere' } })
-    const data = await res.json()
-    if (data && data.length > 0) {
-      return { lat: data[0].lat, lng: data[0].lon }
-    }
-  } catch (e) {
-    // fail silently
-  }
-  return { lat: '', lng: '' }
-}
-
-const handleSubmit = async () => {
-  try {
-    // Upload photos first
-    const uploadedUrls = {}
-    for (const key of ['photo_url1', 'photo_url2', 'photo_url3']) {
-      if (formData[key]) {
-        const url = await uploadToImgBB(formData[key])
-        uploadedUrls[key] = url
-      } else {
-        uploadedUrls[key] = ''
+  const handleSubmit = async () => {
+    try {
+      const uploadedUrls = {}
+      for (const key of ['photo_url1', 'photo_url2', 'photo_url3']) {
+        if (formData[key]) {
+          const url = await uploadToImgBB(formData[key])
+          uploadedUrls[key] = url
+        } else {
+          uploadedUrls[key] = ''
+        }
       }
+
+      const payload = {
+        reporter_name: formData.reporter_name,
+        reporter_contact: formData.reporter_contact,
+        reporter_location: formData.reporter_location,
+        note: formData.note,
+        name: formData.name,
+        age: formData.age,
+        gender: formData.gender,
+        clothing_description: formData.clothing_description,
+        last_seen_location: formData.last_seen_location,
+        last_seen_datetime: new Date(
+          formData.last_seen_datetime_date + 'T' + formData.last_seen_datetime_time
+        ).toISOString(),
+        photo_url1: uploadedUrls.photo_url1,
+        photo_url2: uploadedUrls.photo_url2,
+        photo_url3: uploadedUrls.photo_url3,
+      }
+
+      const res = await fetch('https://xylem-api.ra-physics.space/administrator/missing-reports/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.message || 'Submission failed')
+      alert('Report submitted successfully')
+    } catch (err) {
+      alert('Error: ' + err.message)
     }
-
-    // Geocode locations
-    const reporterCoords = await geocode(formData.reporter_location)
-    const lastSeenCoords = await geocode(formData.last_seen_location)
-
-    // Build payload with lat/lng
-    const payload = {
-      reporter_name: formData.reporter_name,
-      reporter_contact: formData.reporter_contact,
-      reporter_location: formData.reporter_location,
-      reporter_lat: reporterCoords.lat,
-      reporter_lng: reporterCoords.lng,
-      note: formData.note,
-      name: formData.name,
-      age: formData.age,
-      gender: formData.gender,
-      clothing_description: formData.clothing_description,
-      last_seen_location: formData.last_seen_location,
-      last_seen_lat: lastSeenCoords.lat,
-      last_seen_lng: lastSeenCoords.lng,
-      last_seen_datetime: new Date(
-        formData.last_seen_datetime_date + 'T' + formData.last_seen_datetime_time
-      ).toISOString(),
-      photo_url1: uploadedUrls.photo_url1,
-      photo_url2: uploadedUrls.photo_url2,
-      photo_url3: uploadedUrls.photo_url3,
-    }
-
-    const res = await fetch('https://xylem-api.ra-physics.space/administrator/missing-reports/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
-    const result = await res.json()
-    if (!res.ok) throw new Error(result.message || 'Submission failed')
-    alert('Report submitted successfully')
-  } catch (err) {
-    alert('Error: ' + err.message)
   }
-}
-
 
   return (
-    <div
-      className='flex justify-center w-[1286px] h-[1600px] rounded-[38px] bg-[#e8e8e8] pt-10 overflow-y-auto'
-      style={{ boxShadow: 'inset -6px -7px 4px 0px #00000040' }}
-    >
+    <div className='flex justify-center w-[1286px] h-[1600px] rounded-[38px] bg-[#e8e8e8] pt-10 overflow-y-auto' style={{ boxShadow: 'inset -6px -7px 4px 0px #00000040' }}>
       <div className='flex flex-col flex-1 p-10 gap-8'>
         <p className='font-[700] text-[32px] font-poppins text-[#807B7B]'>BASIC INFORMATION</p>
         <div className='font-[300] text-[24px] font-poppins flex flex-col gap-5'>
@@ -195,4 +166,3 @@ const handleSubmit = async () => {
 }
 
 export default MissingReport
-

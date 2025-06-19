@@ -16,7 +16,7 @@ const Navbar = () => {
 
       <div className="flex flex-wrap gap-3 items-center justify-center text-white text-sm sm:text-base">
         <Link to="/records" className="font-light">Records</Link>
-        <Link className="font-light">Map</Link>
+        <Link className="font-light" to="/map">Map</Link>
         <Link to="/report" className="font-light">Report</Link>
         <Link to="/login" className="font-light">Log In</Link>
         <Link

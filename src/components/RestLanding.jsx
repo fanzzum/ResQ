@@ -48,7 +48,19 @@ const RestLanding = () => {
           </div>
         </div>
 
-        <p className='font-inter font-[500] text-[24px] text-white bg-[#ffffff30] w-93 text-center rounded-[74px] shadow-neu p-5'>All inputs are funneled into a centralized queue</p>
+
+          
+         <div className='h-full w-full flex items-center justify-center absolute'>
+          <div className="absolute left-[140px] top-[1416px] rotate-[-145.47deg] w-[600px] h-0 border-[3px] border-white rotate-90 opacity-50" />
+
+          <div className="absolute  top-[1410px] w-[340px] h-0 border-[3px] border-white rotate-90 opacity-50" />
+
+          <div className="absolute left-[720px] top-[1416px] rotate-[145.47deg] w-[600px] h-0 border-[3px] border-white rotate-90 opacity-50" />
+          </div>
+
+    
+
+        <p className='font-inter z-10 font-[500] text-[24px] text-white bg-[#ffffff30] w-93 text-center rounded-[74px] shadow-neu p-5'>All inputs are funneled into a centralized queue</p>
         <div className='flex'>
         <img src={deduplication} className='w-204 '/>
         <p className='inter font-[700] text-[32px] ml-170 text-transparent p-27 absolute bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block text-right'>Verification & Deduplication Layer</p>
@@ -68,6 +80,13 @@ const RestLanding = () => {
           </div>
           <div className='text-[24px] font-inter text-white font-[200] text-center'>
              Each report is scored for trustworthiness and tagged accordingly.
+          </div>
+          <div className='h-full w-full  flex items-center justify-center absolute'>
+          <div className="absolute left-[140px] top-[650px] rotate-[135.47deg] w-[650px] h-0 border-[3px] border-white rotate-90 opacity-50" />
+
+          <div className="absolute  top-[650px] w-[470px] h-0 border-[3px] border-white rotate-90 opacity-50" />
+
+          <div className="absolute left-[650px] top-[650px] rotate-[-135.47deg] w-[650px] h-0 border-[3px] border-white rotate-90 opacity-50" />
           </div>
 
         </div>
