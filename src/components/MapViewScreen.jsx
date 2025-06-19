@@ -22,7 +22,8 @@ const MapViewScreen = () => {
         const token = localStorage.getItem('access')
         if (!token) throw new Error('No auth token')
 
-        // Fetch reports
+        console.log('🛠️ Access token found, requesting reports...')
+
         const response = await axios.get(
           'https://xylem-api.ra-physics.space/administrator/missing-reports/',
           {
@@ -32,32 +33,49 @@ const MapViewScreen = () => {
 
         const reportsData = response.data.results
         setReports(reportsData)
+        console.log('📦 Reports fetched:', reportsData)
 
-        // Geocode addresses to get lat/lng for markers
         const geocodedMarkers = await Promise.all(
           reportsData.map(async (report) => {
-            const address = report.address || report.location || report.label || ''
-            if (!address) return null
+            // Use last_seen_location as the address
+            const address = report.last_seen_location || report.address || report.location || report.label || ''
+            if (!address) {
+              console.warn(`⚠️ Report with id ${report.id} has no valid address.`)
+              return null
+            }
 
-            // Use OpenStreetMap Nominatim API for geocoding (English)
+            console.log(`🌍 Geocoding address: ${address}`)
+
             const geoRes = await fetch(
               `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
             )
             const geoData = await geoRes.json()
 
-            if (geoData.length === 0) return null
+            if (geoData.length === 0) {
+              console.warn(`❌ Geocoding failed for: ${address}`)
+              return null
+            }
+
+            const lat = parseFloat(geoData[0].lat)
+            const lon = parseFloat(geoData[0].lon)
+
+            console.log(`✅ Geocoded "${address}" to:`, { lat, lon })
 
             return {
               id: report.id,
-              position: [parseFloat(geoData[0].lat), parseFloat(geoData[0].lon)],
+              position: [lat, lon],
               label: report.name || report.label || address,
             }
           })
         )
 
-        setMarkers(geocodedMarkers.filter((m) => m !== null))
+        const validMarkers = geocodedMarkers.filter((m) => m !== null)
+        setMarkers(validMarkers)
+        console.log('📍 Final markers:', validMarkers)
+
         setLoading(false)
       } catch (err) {
+        console.error('💥 Failed to load or geocode reports:', err)
         setError(err.message || 'Failed to load or geocode reports')
         setLoading(false)
       }
