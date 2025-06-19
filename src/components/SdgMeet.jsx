@@ -34,20 +34,20 @@ const cardVariants = {
 const SdgMeet = () => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 100 }} // Increased initial y offset
+      initial={{ opacity: 0, y: 100 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{
         once: true,
-        amount: 0.8 // Kept at 80% visibility requirement
+        amount: 0.8
       }}
       transition={{ duration: 0.5 }}
-      className='w-360 h-256 bg-[linear-gradient(0deg,#2D5D7C,#264D64,#336887)] flex flex-col gap-18 p-25'
+      className='w-full max-w-[1920px] mx-auto bg-[linear-gradient(0deg,#2D5D7C,#264D64,#336887)] flex flex-col gap-8 md:gap-14 xl:gap-18 px-4 md:px-10 xl:px-24 py-8'
     >
-      <p className='font-poppins font-[700] text-[60px] text-transparent bg-clip-text bg-gradient-to-r from-[#f8ffce] via-[#eed73e] to-[#eccd05] inline-block'>
+      <p className='font-poppins font-[700] text-3xl md:text-5xl xl:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-[#f8ffce] via-[#eed73e] to-[#eccd05] text-center'>
         SDGs we meet
       </p>
       <motion.div
-        className='flex gap-10'
+        className='flex flex-col md:flex-row gap-6 md:gap-10 xl:gap-14 justify-center items-center'
         variants={containerVariants}
         initial='hidden'
         animate='visible'
