@@ -26,9 +26,9 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-            {/* <LandingPage/> */}
+            <LandingPage/>
             {/* <AdminProfile/> */}
-            <MissingCardAdmin/>
+            {/* <MissingCardAdmin/> */}
   
 
           </>
