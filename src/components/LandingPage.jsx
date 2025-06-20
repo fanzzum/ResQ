@@ -22,8 +22,8 @@ const LandingPage = () => {
     offset: ['start start', 'end end'],
   })
 
-  const scale = useTransform(scrollYProgress, [0, 0.2, 1], [0.9, 0.85, 0.7])
-  const y = useTransform(scrollYProgress, [0, 0.2, 1], [0, 30, 100])
+  const scale = useTransform(scrollYProgress, [0, 0.08, 1], [0.9, 0.85, 0.7])
+  const y = useTransform(scrollYProgress, [0, 0.08, 1], [0, 30, 100])
 
   const boatX = useTransform(scrollYProgress, [0.7, 1], ['-100%', '50%'])
   const boatOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1])
@@ -61,7 +61,7 @@ const LandingPage = () => {
             style={{ y }}
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
-            transition={{ duration: 3, ease: [1, 0, 0, 1] }}
+            transition={{ duration: 1, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
           <motion.img
@@ -71,7 +71,7 @@ const LandingPage = () => {
             style={{ y }}
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
-            transition={{ duration: 3, ease: [1, 0, 0, 1] }}
+            transition={{ duration: 1, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
           <motion.img
@@ -100,7 +100,7 @@ const LandingPage = () => {
           />
           <motion.img
             src={sun}
-            className="absolute z-30 w-48 bottom-80"
+            className="absolute z-30 w-48 bottom-130"
             style={{
               x: sunX,
               y: sunY,
