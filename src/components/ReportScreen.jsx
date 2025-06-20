@@ -5,62 +5,60 @@ import MissingCardDetails from './MissingCardDetails'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import avatar from '../assets/icons/avatar.png'
+
 const ReportScreen = () => {
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedReport, setSelectedReport] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [nextPage, setNextPage] = useState(null)
+  const [prevPage, setPrevPage] = useState(null)
+  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10) // adjust if needed
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchReports = async () => {
-      const token = localStorage.getItem('access')
+    fetchReports(null, 1)
+    // eslint-disable-next-line
+  }, [])
 
-      console.log('🔐 DEBUG: Access Token:', token)
-
-      if (!token) {
-        console.warn('🚫 No token found, redirecting to login')
-        navigate('/login')
-        return
-      }
-
-      try {
-        const response = await axios.get(
-          'https://xylem-api.ra-physics.space/administrator/missing-reports/',
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-
-        console.log('✅ DEBUG: API response:', response.data)
-
-        setReports(response.data.results)
-        setLoading(false)
-      } catch (err) {
-        const status = err.response?.status
-        const message = err.response?.data?.message || 'Failed to fetch reports'
-
-        console.error(`❌ API Error [${status}]:`, err.response?.data || err)
-
-        if (status === 401) {
-          localStorage.removeItem('access')
-          console.warn('🔄 Token expired or invalid, redirecting to login')
-          navigate('/login')
-        } else if (status === 403) {
-          console.warn('⛔ Forbidden: User lacks permission to access reports.')
-        }
-
-        setError(message)
-        setLoading(false)
-      }
+  const fetchReports = async (url = null, page = 1) => {
+    const token = localStorage.getItem('access')
+    if (!token) {
+      navigate('/login')
+      return
     }
-
-    fetchReports()
-  }, [navigate])
+    setLoading(true)
+    setError(null)
+    try {
+      let apiUrl =
+        url ||
+        `https://xylem-api.ra-physics.space/administrator/missing-reports/?p=${page}`
+      const response = await axios.get(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      setReports(response.data.results)
+      setNextPage(response.data.next)
+      setPrevPage(response.data.previous)
+      setCount(response.data.count)
+      setCurrentPage(page)
+      setLoading(false)
+    } catch (err) {
+      const status = err.response?.status
+      const message = err.response?.data?.message || 'Failed to fetch reports'
+      if (status === 401) {
+        localStorage.removeItem('access')
+        navigate('/login')
+      }
+      setError(message)
+      setLoading(false)
+    }
+  }
 
   // Filter reports based on your new criteria and search term
   const filteredReports = reports.filter(report => {
@@ -80,6 +78,13 @@ const ReportScreen = () => {
 
     return (isScrapperWithConfidence || isApproved) && matchesSearch
   })
+
+  const handleNext = () => {
+    if (nextPage) fetchReports(nextPage, currentPage + 1)
+  }
+  const handlePrev = () => {
+    if (prevPage) fetchReports(prevPage, currentPage - 1)
+  }
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
@@ -110,6 +115,26 @@ const ReportScreen = () => {
               onClick={() => setSelectedReport(report)}
             />
           ))}
+        </div>
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center gap-4 mt-8">
+          <button
+            className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+            onClick={handlePrev}
+            disabled={!prevPage}
+          >
+            Previous
+          </button>
+          <span className="font-inter text-lg">
+            Page {currentPage} {count ? `/ ${Math.ceil(count / (reports.length || 1))}` : ''}
+          </span>
+          <button
+            className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+            onClick={handleNext}
+            disabled={!nextPage}
+          >
+            Next
+          </button>
         </div>
       </div>
 

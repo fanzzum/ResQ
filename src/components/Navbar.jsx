@@ -11,6 +11,9 @@ const Navbar = () => {
   const [pendingMessage, setPendingMessage] = useState('')
   const inputRef = useRef(null)
 
+  // Get role from localStorage
+  const role = localStorage.getItem('role')
+
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('user')
@@ -31,6 +34,11 @@ const Navbar = () => {
   const handleOverlayClick = (e) => {
     if (e.target.id === 'chat-overlay') setShowChat(false)
   }
+
+  // Determine profile link based on role
+  let profileLink = '/profile'
+  if (role === 'volunteer') profileLink = '/volunteer-profile'
+  else if (role === 'admin') profileLink = '/admin-profile'
 
   return (
     <>
@@ -62,7 +70,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/profile">
+              <Link to={profileLink}>
                 <img
                   src={avatar}
                   alt="Profile"

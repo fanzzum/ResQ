@@ -21,6 +21,7 @@ import AdminProfile from "./components/AdminProfile"
 import MissingCardAdmin from "./components/MissingCardAdmin"
 import MapList from "./components/MapList"
 import ChatApp from "./components/ChatApp"
+import VolunteerProfile from "./components/VolunteerProfile"
 
 function App() {
   return (
@@ -32,11 +33,9 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-          {/* <ChatApp/>
-          <MapList/> */}
+
             <LandingPage/>
-            {/* <AdminProfile/> */}
-            {/* <MissingCardAdmin/> */}
+     
   
 
           </>
@@ -50,7 +49,8 @@ function App() {
         <Route path="/report" element={<MissingReportScreen/>} />
         <Route path="/records" element={<ReportScreen/>} />
         <Route path="/map" element={<MapViewScreen/>} />
-        <Route path="/profile" element={<AdminProfile/>} />
+        <Route path="/admin-profile" element={<AdminProfile/>} />\
+        <Route path="/volunteer-profile" element={<VolunteerProfile/>} />
 
       </Routes>
       <Footer/>

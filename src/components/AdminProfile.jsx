@@ -9,7 +9,6 @@ import MissingCardDetails from './MissingCardDetails'
 const VIEW_OPTIONS = [
   { label: 'All', value: 'all' },
   { label: 'Approved', value: 'approved' },
-  { label: 'Declined', value: 'declined' }, // For future use if you implement declined logic
   { label: 'Unapproved', value: 'unapproved' },
 ]
 
@@ -26,6 +25,10 @@ const AdminProfile = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedReport, setSelectedReport] = useState(null)
   const [view, setView] = useState('all')
+  const [nextPage, setNextPage] = useState(null)
+  const [prevPage, setPrevPage] = useState(null)
+  const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     // Get user info from localStorage
@@ -41,40 +44,41 @@ const AdminProfile = () => {
     }
   }, [])
 
-  useEffect(() => {
-    // Fetch reports
-    const fetchReports = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const token = localStorage.getItem('access')
-        if (!token) return
-        // Map dropdown value to API param
-        let apiView = view
-        if (view === 'declined') {
-          // If you have declined logic, implement here. For now, fallback to 'all'
-          apiView = 'all'
-        }
-        const response = await axios.get(
-          `https://xylem-api.ra-physics.space/administrator/missing-reports/?view=${apiView}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        setReports(response.data.results)
-        setLoading(false)
-      } catch (err) {
-        setError('Failed to fetch reports')
-        setLoading(false)
-      }
+  // Fetch reports (with pagination)
+  const fetchReports = async (url = null, page = 1, selectedView = view) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const token = localStorage.getItem('access')
+      if (!token) return
+      let apiUrl =
+        url ||
+        `https://xylem-api.ra-physics.space/administrator/missing-reports/?view=${selectedView}&p=${page}`
+      const response = await axios.get(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      setReports(response.data.results)
+      setNextPage(response.data.next)
+      setPrevPage(response.data.previous)
+      setCount(response.data.count)
+      setCurrentPage(page)
+      setLoading(false)
+    } catch (err) {
+      setError('Failed to fetch reports')
+      setLoading(false)
     }
-    fetchReports()
+  }
+
+  // Fetch on view/page change
+  useEffect(() => {
+    fetchReports(null, 1, view)
+    // eslint-disable-next-line
   }, [view])
 
-  // Accept handler
+  // Accept handler (PUT request)
   const handleAccept = async (report) => {
     try {
       const token = localStorage.getItem('access')
@@ -93,7 +97,6 @@ const AdminProfile = () => {
         reporter_location: report.reporter_location,
         note: report.note,
         approved: true,
-        confidence_level: 100,
       }
       await axios.put(
         `https://xylem-api.ra-physics.space/administrator/missing-reports/?id=${report.id}`,
@@ -108,7 +111,7 @@ const AdminProfile = () => {
       setReports(prev =>
         prev.map(r =>
           r.id === report.id
-            ? { ...r, approved: true, confidence_level: 100 }
+            ? { ...r, approved: true }
             : r
         )
       )
@@ -117,13 +120,15 @@ const AdminProfile = () => {
     }
   }
 
-  // Decline handler
-  const handleDecline = (report) => {
-    setReports(prev => prev.filter(r => r.id !== report.id))
-  }
+  // Filter reports based on dropdown
+  const filteredByView = reports.filter(report => {
+    if (view === 'approved') return report.approved === true
+    if (view === 'unapproved') return report.approved !== true
+    return true // all
+  })
 
-  // Filter reports based on search term
-  const filteredReports = reports.filter((report) => {
+  // Filter by search term
+  const filteredReports = filteredByView.filter((report) => {
     const term = searchTerm.toLowerCase()
     return (
       report.name?.toLowerCase().includes(term) ||
@@ -131,6 +136,14 @@ const AdminProfile = () => {
       report.reporter_name?.toLowerCase().includes(term)
     )
   })
+
+  // Pagination controls
+  const handleNext = () => {
+    if (nextPage) fetchReports(nextPage, currentPage + 1)
+  }
+  const handlePrev = () => {
+    if (prevPage) fetchReports(prevPage, currentPage - 1)
+  }
 
   return (
     <div className='w-full h-full bg-white p-15 gap-10 flex flex-col inter'>
@@ -191,36 +204,48 @@ const AdminProfile = () => {
         ) : error ? (
           <div className="text-center text-red-500 p-4">{error}</div>
         ) : (
-          <div className="grid grid-cols-2 gap-20">
-            {filteredReports.map((report) => {
-              // Approved: show MissingCard only
-              if (view === 'approved' || (view === 'all' && report.approved)) {
-                return (
+          <>
+            <div className="grid grid-cols-2 gap-20">
+              {filteredReports.map((report) =>
+                report.approved === true ? (
                   <MissingCard
                     key={report.id}
                     {...report}
                     onClick={() => setSelectedReport(report)}
                   />
-                )
-              }
-              // Unapproved: show MissingCardAdmin with Accept and Declined (no Decline button)
-              if (view === 'unapproved' || (view === 'all' && !report.approved)) {
-                return (
+                ) : (
                   <MissingCardAdmin
                     key={report.id}
                     {...report}
                     onClick={() => setSelectedReport(report)}
-                    onAccept={() => handleAccept(report)}
-                    // Decline button replaced with Declined text
+                    onAccept={view === 'unapproved' ? () => handleAccept(report) : null}
                     onDecline={null}
                     declineLabel="Declined"
                   />
                 )
-              }
-              // Fallback (should not occur)
-              return null
-            })}
-          </div>
+              )}
+            </div>
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <button
+                className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+                onClick={handlePrev}
+                disabled={!prevPage}
+              >
+                Previous
+              </button>
+              <span className="font-inter text-lg">
+                Page {currentPage} {count ? `/ ${Math.ceil(count / reports.length || 1)}` : ''}
+              </span>
+              <button
+                className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+                onClick={handleNext}
+                disabled={!nextPage}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
       </div>
       {/* Modal for details */}
