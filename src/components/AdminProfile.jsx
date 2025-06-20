@@ -6,6 +6,13 @@ import MissingCard from './MissingCard'
 import MissingCardAdmin from './MissingCardAdmin'
 import MissingCardDetails from './MissingCardDetails'
 
+const VIEW_OPTIONS = [
+  { label: 'All', value: 'all' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Declined', value: 'declined' }, // For future use if you implement declined logic
+  { label: 'Unapproved', value: 'unapproved' },
+]
+
 const AdminProfile = () => {
   const [user, setUser] = useState({
     name: '',
@@ -18,6 +25,7 @@ const AdminProfile = () => {
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedReport, setSelectedReport] = useState(null)
+  const [view, setView] = useState('all')
 
   useEffect(() => {
     // Get user info from localStorage
@@ -31,13 +39,24 @@ const AdminProfile = () => {
         role: role ? role.toUpperCase() : '',
       })
     }
+  }, [])
+
+  useEffect(() => {
     // Fetch reports
     const fetchReports = async () => {
+      setLoading(true)
+      setError(null)
       try {
         const token = localStorage.getItem('access')
         if (!token) return
+        // Map dropdown value to API param
+        let apiView = view
+        if (view === 'declined') {
+          // If you have declined logic, implement here. For now, fallback to 'all'
+          apiView = 'all'
+        }
         const response = await axios.get(
-          'https://xylem-api.ra-physics.space/administrator/missing-reports/',
+          `https://xylem-api.ra-physics.space/administrator/missing-reports/?view=${apiView}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -53,13 +72,12 @@ const AdminProfile = () => {
       }
     }
     fetchReports()
-  }, [])
+  }, [view])
 
   // Accept handler
   const handleAccept = async (report) => {
     try {
       const token = localStorage.getItem('access')
-      // Build the payload as required by the API, set approved: true and confidence_level: 100
       const updatedReport = {
         name: report.name,
         age: report.age,
@@ -104,9 +122,8 @@ const AdminProfile = () => {
     setReports(prev => prev.filter(r => r.id !== report.id))
   }
 
-  // Filter reports based on search term and exclude approved ones
+  // Filter reports based on search term
   const filteredReports = reports.filter((report) => {
-    if (report.approved === true) return false // Exclude approved reports
     const term = searchTerm.toLowerCase()
     return (
       report.name?.toLowerCase().includes(term) ||
@@ -146,6 +163,16 @@ const AdminProfile = () => {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
+        {/* Dropdown menu */}
+        <select
+          className="ml-8 mr-8 px-4 py-2 rounded-[10px] border border-gray-300 text-[20px] font-inter bg-white"
+          value={view}
+          onChange={e => setView(e.target.value)}
+        >
+          {VIEW_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
         <div className='flex items-center relative'>
           <input
             className='bg-[#9F9F9F] w-74 pl-13 h-12 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[24px]'

@@ -19,13 +19,17 @@ const MessageList = ({ messages, isBotTyping }) => {
             <span className="text-md text-[#F64949] font-[700] mb-1">ResQBot</span>
           )}
           <div
-            className={`p-2 rounded max-w-sm ${
+            className={`p-7  rounded-[18px] max-w-[1800px]  ${
               msg.role === 'user'
                 ? 'bg-white text-black text-right p-[7px_18px] shadow-[0px_4px_4px_0px_#00000040] self-end'
                 : 'bg-gray-300 text-black self-start'
             }`}
+            // Render bot messages as HTML, user messages as plain text
+            {...(msg.role === 'bot'
+              ? { dangerouslySetInnerHTML: { __html: msg.content } }
+              : {})}
           >
-            {msg.content}
+            {msg.role === 'user' ? msg.content : null}
           </div>
         </div>
       ))}
