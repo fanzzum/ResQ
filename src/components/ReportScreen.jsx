@@ -14,33 +14,47 @@ const ReportScreen = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      try {
-        const token = localStorage.getItem('access')
-        if (!token) {
-          navigate('/login')
-          return
-        }
+      const token = localStorage.getItem('access')
 
+      console.log('🔐 DEBUG: Access Token:', token)
+
+      if (!token) {
+        console.warn('🚫 No token found, redirecting to login')
+        navigate('/login')
+        return
+      }
+
+      try {
         const response = await axios.get(
           'https://xylem-api.ra-physics.space/administrator/missing-reports/',
           {
             headers: {
               'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
+              'Content-Type': 'application/json',
+            },
           }
         )
+
+        console.log('✅ DEBUG: API response:', response.data)
+
         setReports(response.data.results)
         setLoading(false)
       } catch (err) {
-        console.error('API Error:', err.response || err)
-        setError(err.response?.data?.detail || 'Failed to fetch reports')
-        setLoading(false)
+        const status = err.response?.status
+        const message = err.response?.data?.message || 'Failed to fetch reports'
 
-        if (err.response?.status === 401) {
+        console.error(`❌ API Error [${status}]:`, err.response?.data || err)
+
+        if (status === 401) {
           localStorage.removeItem('access')
+          console.warn('🔄 Token expired or invalid, redirecting to login')
           navigate('/login')
+        } else if (status === 403) {
+          console.warn('⛔ Forbidden: User lacks permission to access reports.')
         }
+
+        setError(message)
+        setLoading(false)
       }
     }
 
@@ -56,8 +70,11 @@ const ReportScreen = () => {
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
         <div className='flex items-center'>
-          <input className='bg-[#9F9F9F] w-74 pl-13 h-12 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[24px]' placeholder='search' />
-          <img src={search} className='absolute ml-4 w-7' />
+          <input
+            className='bg-[#9F9F9F] w-74 pl-13 h-12 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[24px]'
+            placeholder='search'
+          />
+          <img src={search} className='absolute ml-4 w-7' alt="Search" />
         </div>
       </div>
 
@@ -77,11 +94,11 @@ const ReportScreen = () => {
       {/* Modal */}
       {selectedReport && (
         <div
-          className="fixed inset-0  z-50 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center"
           onClick={() => setSelectedReport(null)}
         >
           <div
-            className="bg-[#ffffff70]  rounded-[57px] max-h-[90vh] overflow-y-auto"
+            className="bg-[#ffffff70] rounded-[57px] max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <MissingCardDetails data={selectedReport} />

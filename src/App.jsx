@@ -17,6 +17,8 @@ import ReportScreen from "./components/ReportScreen"
 import LogInScreen from "./components/LogInScreen"
 import SignUpScreen from "./components/SignUpScreen"
 import MapViewScreen from "./components/MapViewScreen"
+import AdminProfile from "./components/AdminProfile"
+import MissingCardAdmin from "./components/MissingCardAdmin"
 function App() {
   return (
     <>
@@ -25,6 +27,8 @@ function App() {
         <Route path="/" element={
           <>
             <LandingPage/>
+            {/* <AdminProfile/> */}
+            {/* <MissingCardAdmin/> */}
   
 
           </>
@@ -38,6 +42,7 @@ function App() {
         <Route path="/report" element={<MissingReportScreen/>} />
         <Route path="/records" element={<ReportScreen/>} />
         <Route path="/map" element={<MapViewScreen/>} />
+        <Route path="/profile" element={<AdminProfile/>} />
 
       </Routes>
       <Footer/>
