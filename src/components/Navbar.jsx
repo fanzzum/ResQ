@@ -36,7 +36,7 @@ const Navbar = () => {
   }
 
   // Determine profile link based on role
-  let profileLink = '/profile'
+  let profileLink = null
   if (role === 'volunteer') profileLink = '/volunteer-profile'
   else if (role === 'admin') profileLink = '/admin-profile'
 
@@ -68,7 +68,7 @@ const Navbar = () => {
                 Sign Up
               </Link>
             </>
-          ) : (
+          ) : profileLink ? (
             <>
               <Link to={profileLink}>
                 <img
@@ -83,6 +83,16 @@ const Navbar = () => {
               >
                 Logout
               </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="font-light">Log In</Link>
+              <Link
+                to="/signup"
+                className="rounded-md px-4 py-2 text-white font-normal shadow-[0px_0px_10px_0px_#65C0ED80] bg-gradient-to-t from-[#165179] to-[#5F8BA7] text-sm sm:text-base"
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </div>
