@@ -192,23 +192,34 @@ const AdminProfile = () => {
           <div className="text-center text-red-500 p-4">{error}</div>
         ) : (
           <div className="grid grid-cols-2 gap-20">
-            {filteredReports.map((report) =>
-              report.source === 'scrapper' && Number(report.confidence_level) >= 0 ? (
-                <MissingCard
-                  key={report.id}
-                  {...report}
-                  onClick={() => setSelectedReport(report)}
-                />
-              ) : (
-                <MissingCardAdmin
-                  key={report.id}
-                  {...report}
-                  onClick={() => setSelectedReport(report)}
-                  onAccept={() => handleAccept(report)}
-                  onDecline={() => handleDecline(report)}
-                />
-              )
-            )}
+            {filteredReports.map((report) => {
+              // Approved: show MissingCard only
+              if (view === 'approved' || (view === 'all' && report.approved)) {
+                return (
+                  <MissingCard
+                    key={report.id}
+                    {...report}
+                    onClick={() => setSelectedReport(report)}
+                  />
+                )
+              }
+              // Unapproved: show MissingCardAdmin with Accept and Declined (no Decline button)
+              if (view === 'unapproved' || (view === 'all' && !report.approved)) {
+                return (
+                  <MissingCardAdmin
+                    key={report.id}
+                    {...report}
+                    onClick={() => setSelectedReport(report)}
+                    onAccept={() => handleAccept(report)}
+                    // Decline button replaced with Declined text
+                    onDecline={null}
+                    declineLabel="Declined"
+                  />
+                )
+              }
+              // Fallback (should not occur)
+              return null
+            })}
           </div>
         )}
       </div>

@@ -12,6 +12,7 @@ const MissingCardAdmin = ({
   onClick, // for "View Details"
   onAccept,
   onDecline,
+  declineLabel, // NEW: for showing "Declined" text
 }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -59,18 +60,26 @@ const MissingCardAdmin = ({
         </div>
         {/* Accept/Decline Buttons */}
         <div className="flex gap-6 mt-6">
-          <button
-            onClick={onAccept}
-            className="bg-[linear-gradient(180deg,#165179,#2E5E7F,#5F8BA7)] flex items-center justify-center hover:bg-red-600 text-white font-[600] text-[13px] px-5 w-24 h-8 rounded-[8px] transition"
-          >
-            Accept
-          </button>
-          <button
-            onClick={onDecline}
-            className="bg-[linear-gradient(180deg,#C30F12,#9C0003,#751012)] flex items-center justify-center hover:bg-red-600 text-white font-[600] text-[13px] px-5 w-24 h-8 rounded-[8px] transition"
-          >
-            Decline
-          </button>
+          {onAccept && (
+            <button
+              onClick={onAccept}
+              className="bg-[linear-gradient(180deg,#165179,#2E5E7F,#5F8BA7)] flex items-center justify-center hover:bg-red-600 text-white font-[600] text-[13px] px-5 w-24 h-8 rounded-[8px] transition"
+            >
+              Accept
+            </button>
+          )}
+          {onDecline ? (
+            <button
+              onClick={onDecline}
+              className="bg-[linear-gradient(180deg,#C30F12,#9C0003,#751012)] flex items-center justify-center hover:bg-red-600 text-white font-[600] text-[13px] px-5 w-24 h-8 rounded-[8px] transition"
+            >
+              Decline
+            </button>
+          ) : declineLabel ? (
+            <span className="flex items-center text-red-600 font-[600] text-[13px] px-5 w-24 h-8 rounded-[8px] justify-center bg-[#f8d7da]">
+              {declineLabel}
+            </span>
+          ) : null}
         </div>
       </div>
     </div>
