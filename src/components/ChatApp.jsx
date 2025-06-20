@@ -15,7 +15,7 @@ const ChatApp = ({ initialMessage = '' }) => {
       const res = await axios.post('https://resq-scraper.bigtdevs.xyz/v1/chatbot/prompt', {
         prompt: userInput
       })
-      setMessages([...newMessages, { role: 'bot', content: res.data.reply }])
+      setMessages([...newMessages, { role: 'bot', content: res.data.response }])
     } catch (err) {
       setMessages([...newMessages, { role: 'bot', content: '⚠️ API error' }])
     }
