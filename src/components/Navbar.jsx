@@ -11,8 +11,8 @@ const Navbar = () => {
   const [pendingMessage, setPendingMessage] = useState('')
   const inputRef = useRef(null)
 
-  // Get role from localStorage
-  const role = localStorage.getItem('role')
+  // Get role from localStorage and normalize to uppercase for comparison
+  const role = (localStorage.getItem('role') || '').toUpperCase()
 
   const handleLogout = () => {
     localStorage.removeItem('access')
@@ -35,10 +35,10 @@ const Navbar = () => {
     if (e.target.id === 'chat-overlay') setShowChat(false)
   }
 
-  // Determine profile link based on role
+  // Determine profile link based on role (case-insensitive)
   let profileLink = null
-  if (role === 'volunteer') profileLink = '/volunteer-profile'
-  else if (role === 'admin') profileLink = '/admin-profile'
+  if (role === 'VOLUNTEER') profileLink = '/volunteer-profile'
+  else if (role === 'ADMIN') profileLink = '/admin-profile'
 
   return (
     <>
