@@ -58,6 +58,23 @@ const MissingReport = () => {
     return data.data.url
   }
 
+  // Helper to lowercase all string fields in an object (except files and dates)
+  const toLowercaseFields = (obj) => {
+    const lowered = {}
+    for (const key in obj) {
+      if (
+        typeof obj[key] === 'string' &&
+        key !== 'last_seen_datetime_date' &&
+        key !== 'last_seen_datetime_time'
+      ) {
+        lowered[key] = obj[key].toLowerCase()
+      } else {
+        lowered[key] = obj[key]
+      }
+    }
+    return lowered
+  }
+
   const handleSubmit = async () => {
     try {
       const uploadedUrls = {}
@@ -70,16 +87,19 @@ const MissingReport = () => {
         }
       }
 
+      // Lowercase all string fields except files and dates
+      const loweredFormData = toLowercaseFields(formData)
+
       const payload = {
-        reporter_name: formData.reporter_name,
-        reporter_contact: formData.reporter_contact,
-        reporter_location: formData.reporter_location,
-        note: formData.note,
-        name: formData.name,
-        age: formData.age,
-        gender: formData.gender,
-        clothing_description: formData.clothing_description,
-        last_seen_location: formData.last_seen_location,
+        reporter_name: loweredFormData.reporter_name,
+        reporter_contact: loweredFormData.reporter_contact,
+        reporter_location: loweredFormData.reporter_location,
+        note: loweredFormData.note,
+        name: loweredFormData.name,
+        age: loweredFormData.age,
+        gender: loweredFormData.gender,
+        clothing_description: loweredFormData.clothing_description,
+        last_seen_location: loweredFormData.last_seen_location,
         last_seen_datetime: new Date(
           formData.last_seen_datetime_date + 'T' + formData.last_seen_datetime_time
         ).toISOString(),

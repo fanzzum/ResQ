@@ -58,7 +58,7 @@ const MissingCardDetails = ({ data }) => {
       </div>
 
       {/* Rescuer Info */}
-      <p className="font-[500] text-2xl mt-6">Rescuer’s Information</p>
+      <p className="font-[500] text-2xl mt-6">Reporter’s Information</p>
       <div className="flex gap-10 p-6">
         <img
           alt="rescuer"

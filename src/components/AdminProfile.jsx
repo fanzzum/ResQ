@@ -4,6 +4,7 @@ import search from '../assets/icons/search.png'
 import axios from 'axios'
 import MissingCard from './MissingCard'
 import MissingCardAdmin from './MissingCardAdmin'
+import MissingCardDetails from './MissingCardDetails'
 
 const AdminProfile = () => {
   const [user, setUser] = useState({
@@ -16,6 +17,7 @@ const AdminProfile = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedReport, setSelectedReport] = useState(null)
 
   useEffect(() => {
     // Get user info from localStorage
@@ -168,13 +170,13 @@ const AdminProfile = () => {
                 <MissingCard
                   key={report.id}
                   {...report}
-                  onClick={() => {/* handle details modal if needed */}}
+                  onClick={() => setSelectedReport(report)}
                 />
               ) : (
                 <MissingCardAdmin
                   key={report.id}
                   {...report}
-                  onClick={() => {/* handle details modal if needed */}}
+                  onClick={() => setSelectedReport(report)}
                   onAccept={() => handleAccept(report)}
                   onDecline={() => handleDecline(report)}
                 />
@@ -183,6 +185,20 @@ const AdminProfile = () => {
           </div>
         )}
       </div>
+      {/* Modal for details */}
+      {selectedReport && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={() => setSelectedReport(null)}
+        >
+          <div
+            className="bg-[#ffffff70] rounded-[57px] max-h-[75vh] overflow-y-auto scrollbar-none"
+            onClick={e => e.stopPropagation()}
+          >
+            <MissingCardDetails data={selectedReport} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
