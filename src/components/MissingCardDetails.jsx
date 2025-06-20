@@ -1,6 +1,6 @@
 import React from 'react'
 import cam from '../assets/icons/cam.png'
-
+import avatar from '../assets/icons/avatar.png'
 const MissingCardDetails = ({ data }) => {
   if (!data) return null
 
@@ -26,18 +26,18 @@ const MissingCardDetails = ({ data }) => {
   }
 
   return (
-    <div className="bg-[#94949495] rounded-[3.5rem] p-6 flex flex-col gap-5 max-w-md w-full max-h-[90vh] overflow-y-auto font-inter">
+    <div className="bg-[#94949495] rounded-[3.5rem] p-12 flex flex-col gap-10 max-w-4xl w-full max-h-[90vh] overflow-y-auto font-inter">
       {/* Reporter Section */}
-      <div className="flex gap-4 p-4">
+      <div className="flex gap-10 p-6">
         <img
           alt="reporter"
-          src={photo_url1 || cam}
-          className="w-30 h-30 object-cover rounded-[20px] flex-shrink-0"
+          src={photo_url1 || avatar}
+          className="w-52 h-52 object-cover rounded-[30px] flex-shrink-0"
         />
-        <div className="flex flex-col gap-1 flex-grow">
-          <p className="font-[400] text-2xl">{name}</p>
-          <p className="italic font-[200] text-sm">{formatDate(last_seen_datetime)}</p>
-          <div className="grid grid-cols-[5fr_1fr_6fr] gap-x-1 gap-y-1 font-[400] text-sm items-center">
+        <div className="flex flex-col gap-3 flex-grow">
+          <p className="font-[400] text-4xl">{name}</p>
+          <p className="italic font-[200] text-lg">{formatDate(last_seen_datetime)}</p>
+          <div className="grid grid-cols-[200px_16px_1fr] gap-x-2 gap-y-3 font-[400] text-lg items-center">
             <div>Approximate age</div><div>:</div><div>{age}</div>
             <div>Gender</div><div>:</div><div>{gender}</div>
             <div>Clothing</div><div>:</div><div>{clothing_description}</div>
@@ -47,25 +47,25 @@ const MissingCardDetails = ({ data }) => {
       </div>
 
       {/* Note */}
-      <div className="flex font-poppins font-[400] gap-3 items-center">
-        <p className="text-lg flex-shrink-0">Note:</p>
+      <div className="flex font-poppins font-[400] gap-5 items-center">
+        <p className="text-2xl flex-shrink-0">Note:</p>
         <input
-          className="bg-white flex-grow h-6 rounded px-2"
+          className="bg-white flex-grow h-10 rounded px-4 text-lg"
           value={note || ''}
           readOnly
         />
       </div>
 
       {/* Rescuer Info */}
-      <p className="font-[500] text-xl mt-4">Rescuer’s Information</p>
-      <div className="flex gap-4 p-4">
+      <p className="font-[500] text-2xl mt-6">Rescuer’s Information</p>
+      <div className="flex gap-10 p-6">
         <img
           alt="rescuer"
-          src={cam}
-          className="w-20 h-20 object-cover rounded-full flex-shrink-0"
+          src={avatar}
+          className="w-32 h-32 object-cover rounded-full flex-shrink-0"
         />
-        <div className="flex flex-col gap-1 flex-grow">
-          <div className="grid grid-cols-[5fr_1fr_6fr] gap-x-1 gap-y-1 pt-4 font-[400] text-sm items-center">
+        <div className="flex flex-col gap-2 flex-grow">
+          <div className="grid grid-cols-[200px_16px_1fr] gap-x-2 gap-y-3 pt-4 font-[400] text-lg items-center">
             <div>Name</div><div>:</div><div>{reporter_name || 'Unknown'}</div>
             <div>Contact</div><div>:</div><div>{reporter_contact || 'Unknown'}</div>
             <div>Organization</div><div>:</div><div>{reporter_location || 'Unknown'}</div>

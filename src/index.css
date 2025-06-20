@@ -2,6 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
 @import "tailwindcss";
 @import 'leaflet/dist/leaflet.css';
+@plugin 'tailwind-scrollbar';
+
+/* Optional: configure additional utilities */
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+  preferredStrategy: 'pseudoelements';
+}
 body {
     font-family: 'Inter', sans-serif;
     background-color: #165179;

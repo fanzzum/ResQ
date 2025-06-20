@@ -1,6 +1,6 @@
 import React from 'react'
 import cam from '../assets/icons/cam.png'
-
+import avatar from '../assets/icons/avatar.png'
 const MissingCard = ({
   name,
   age,
@@ -29,7 +29,7 @@ const MissingCard = ({
     <div className="flex p-15 gap-14 font-inter bg-[#D9D9D9] w-162 h-fit rounded-[10px] shadow-md">
       <img
         alt="Missing Person"
-        src={photo_url1 || cam}
+        src={photo_url1 || avatar}
         className="w-42 h-48 object-cover rounded-[10px]"
       />
 

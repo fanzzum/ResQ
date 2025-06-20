@@ -4,6 +4,8 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import search from '../assets/icons/search.png'
 import axios from 'axios'
+import MapList from './MapList'
+import MissingCardDetails from './MissingCardDetails'
 
 const icon = new L.Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
@@ -15,14 +17,13 @@ const MapViewScreen = () => {
   const [markers, setMarkers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedReport, setSelectedReport] = useState(null)
 
   useEffect(() => {
     const fetchReportsAndGeocode = async () => {
       try {
         const token = localStorage.getItem('access')
         if (!token) throw new Error('No auth token')
-
-        console.log('🛠️ Access token found, requesting reports...')
 
         const response = await axios.get(
           'https://xylem-api.ra-physics.space/administrator/missing-reports/',
@@ -33,34 +34,20 @@ const MapViewScreen = () => {
 
         const reportsData = response.data.results
         setReports(reportsData)
-        console.log('📦 Reports fetched:', reportsData)
 
         const geocodedMarkers = await Promise.all(
           reportsData.map(async (report) => {
-            // Use last_seen_location as the address
             const address = report.last_seen_location || report.address || report.location || report.label || ''
-            if (!address) {
-              console.warn(`⚠️ Report with id ${report.id} has no valid address.`)
-              return null
-            }
-
-            console.log(`🌍 Geocoding address: ${address}`)
+            if (!address) return null
 
             const geoRes = await fetch(
               `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
             )
             const geoData = await geoRes.json()
-
-            if (geoData.length === 0) {
-              console.warn(`❌ Geocoding failed for: ${address}`)
-              return null
-            }
+            if (geoData.length === 0) return null
 
             const lat = parseFloat(geoData[0].lat)
             const lon = parseFloat(geoData[0].lon)
-
-            console.log(`✅ Geocoded "${address}" to:`, { lat, lon })
-
             return {
               id: report.id,
               position: [lat, lon],
@@ -71,11 +58,8 @@ const MapViewScreen = () => {
 
         const validMarkers = geocodedMarkers.filter((m) => m !== null)
         setMarkers(validMarkers)
-        console.log('📍 Final markers:', validMarkers)
-
         setLoading(false)
       } catch (err) {
-        console.error('💥 Failed to load or geocode reports:', err)
         setError(err.message || 'Failed to load or geocode reports')
         setLoading(false)
       }
@@ -84,13 +68,23 @@ const MapViewScreen = () => {
     fetchReportsAndGeocode()
   }, [])
 
+  // Handler for MapList "View details"
+  const handleViewDetails = (report) => {
+    setSelectedReport(report)
+  }
+
+  // Handler to close details modal
+  const handleCloseDetails = () => {
+    setSelectedReport(null)
+  }
+
   if (loading) return <div className="text-center p-4">Loading map data...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
 
   return (
-    <div className="w-full h-screen flex flex-col font-inter">
+    <div className="w-full h-screen flex flex-col font-inter relative">
       {/* Header */}
-      <div className="w-full h-[90px] bg-[#2D5D7C] flex px-7 justify-between items-center">
+      <div className="w-full h-[90px] bg-[#2D5D7C] flex px-7 justify-between items-center z-10">
         <p className="font-[800] text-[40px] text-white">MAP VIEW</p>
         <div className="flex items-center relative">
           <input
@@ -101,8 +95,8 @@ const MapViewScreen = () => {
         </div>
       </div>
 
-      {/* Map */}
-      <div className="flex-1">
+      {/* Map with absolute MapList on top */}
+      <div className="flex-1 relative w-full h-full">
         <MapContainer
           center={markers.length ? markers[0].position : [23.8103, 90.4125]}
           zoom={7}
@@ -112,14 +106,39 @@ const MapViewScreen = () => {
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           />
-
           {markers.map(({ id, position, label }) => (
             <Marker key={id} position={position} icon={icon}>
               <Popup>{label}</Popup>
             </Marker>
           ))}
         </MapContainer>
+        {/* Absolute MapList */}
+        <div className="absolute top-8 right-8 w-96 max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 z-20 bg-transparent bg-opacity-90 rounded-lg shadow-lg">
+          <MapList reports={reports} onViewDetails={handleViewDetails} />
+        </div>
       </div>
+
+      {/* Details Modal */}
+      {selectedReport && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-transparent bg-opacity-40"
+          onClick={handleCloseDetails}
+        >
+          <div
+            className="  rounded-[3.5rem] p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-6 left-6 text-3xl font-bold text-gray-700 bg-white bg-opacity-70 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-100 transition"
+              onClick={handleCloseDetails}
+              aria-label="Close details"
+            >
+              ×
+            </button>
+            <MissingCardDetails data={selectedReport} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

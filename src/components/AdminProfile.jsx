@@ -20,12 +20,13 @@ const AdminProfile = () => {
   useEffect(() => {
     // Get user info from localStorage
     const userInfo = JSON.parse(localStorage.getItem('user'))
+    const role = localStorage.getItem('role') // <-- get role directly
     if (userInfo) {
       setUser({
         name: userInfo.first_name || userInfo.username || '',
         email: userInfo.email || '',
         phone: userInfo.phone || '',
-        role: userInfo.role || '', // Make sure role is available
+        role: role ? role.toUpperCase() : '', // <-- set role here
       })
     }
     // Fetch reports

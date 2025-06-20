@@ -4,7 +4,7 @@ import MissingCard from './MissingCard'
 import MissingCardDetails from './MissingCardDetails'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-
+import avatar from '../assets/icons/avatar.png'
 const ReportScreen = () => {
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
@@ -62,8 +62,8 @@ const ReportScreen = () => {
     fetchReports()
   }, [navigate])
 
-  // Filter reports based on search term
-  const filteredReports = reports.filter((report) => {
+  // Filter reports based on search term only (show all reports)
+  const filteredReports = reports.filter(report => {
     const term = searchTerm.toLowerCase()
     return (
       report.name?.toLowerCase().includes(term) ||

@@ -19,6 +19,8 @@ import SignUpScreen from "./components/SignUpScreen"
 import MapViewScreen from "./components/MapViewScreen"
 import AdminProfile from "./components/AdminProfile"
 import MissingCardAdmin from "./components/MissingCardAdmin"
+import MapList from "./components/MapList"
+import ChatApp from "./components/ChatApp"
 function App() {
   return (
     <>
@@ -26,6 +28,8 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
+          {/* <ChatApp/>
+          <MapList/> */}
             <LandingPage/>
             {/* <AdminProfile/> */}
             {/* <MissingCardAdmin/> */}
