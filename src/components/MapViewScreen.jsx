@@ -5,7 +5,6 @@ import 'leaflet/dist/leaflet.css'
 import search from '../assets/icons/search.png'
 import axios from 'axios'
 import MapList from './MapList'
-import MissingCardDetails from './MissingCardDetails'
 
 const icon = new L.Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
@@ -52,7 +51,7 @@ const MapViewScreen = () => {
               id: report.id,
               position: [lat, lon],
               label: report.name || report.label || address,
-            }
+             }
           })
         )
 

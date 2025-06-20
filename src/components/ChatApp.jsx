@@ -12,8 +12,8 @@ const ChatApp = ({ initialMessage = '' }) => {
     setMessages(newMessages)
     setIsBotTyping(true)
     try {
-      const res = await axios.post('https://your-chat-api.com/chat/', {
-        message: userInput
+      const res = await axios.post('https://resq-scraper.bigtdevs.xyz/v1/chatbot/prompt', {
+        prompt: userInput
       })
       setMessages([...newMessages, { role: 'bot', content: res.data.reply }])
     } catch (err) {

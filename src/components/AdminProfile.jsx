@@ -20,13 +20,13 @@ const AdminProfile = () => {
   useEffect(() => {
     // Get user info from localStorage
     const userInfo = JSON.parse(localStorage.getItem('user'))
-    const role = localStorage.getItem('role') // <-- get role directly
+    const role = localStorage.getItem('role')
     if (userInfo) {
       setUser({
         name: userInfo.first_name || userInfo.username || '',
         email: userInfo.email || '',
         phone: userInfo.phone || '',
-        role: role ? role.toUpperCase() : '', // <-- set role here
+        role: role ? role.toUpperCase() : '',
       })
     }
     // Fetch reports
@@ -53,8 +53,58 @@ const AdminProfile = () => {
     fetchReports()
   }, [])
 
-  // Filter reports based on search term
+  // Accept handler
+  const handleAccept = async (report) => {
+    try {
+      const token = localStorage.getItem('access')
+      // Build the payload as required by the API, set approved: true and confidence_level: 100
+      const updatedReport = {
+        name: report.name,
+        age: report.age,
+        gender: report.gender,
+        clothing_description: report.clothing_description,
+        last_seen_location: report.last_seen_location,
+        last_seen_datetime: report.last_seen_datetime,
+        photo_url1: report.photo_url1,
+        photo_url2: report.photo_url2,
+        photo_url3: report.photo_url3,
+        reporter_name: report.reporter_name,
+        reporter_contact: report.reporter_contact,
+        reporter_location: report.reporter_location,
+        note: report.note,
+        approved: true,
+        confidence_level: 100,
+      }
+      await axios.put(
+        `https://xylem-api.ra-physics.space/administrator/missing-reports/?id=${report.id}`,
+        updatedReport,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      setReports(prev =>
+        prev.map(r =>
+          r.id === report.id
+            ? { ...r, approved: true, confidence_level: 100 }
+            : r
+        )
+      )
+    } catch (err) {
+      alert('Failed to approve report')
+    }
+  }
+
+  // Decline handler
+  const handleDecline = (report) => {
+    setReports(prev => prev.filter(r => r.id !== report.id))
+  }
+
+  // Filter reports based on search term and exclude approved ones
   const filteredReports = reports.filter((report) => {
+    if (report.approved === true) return false // Exclude approved reports
     const term = searchTerm.toLowerCase()
     return (
       report.name?.toLowerCase().includes(term) ||
@@ -114,19 +164,19 @@ const AdminProfile = () => {
         ) : (
           <div className="grid grid-cols-2 gap-20">
             {filteredReports.map((report) =>
-              user.role === 'ADMIN' ? (
-                <MissingCardAdmin
-                  key={report.id}
-                  {...report}
-                  onClick={() => {/* handle details modal if needed */}}
-                  onAccept={() => {/* handle accept logic */}}
-                  onDecline={() => {/* handle decline logic */}}
-                />
-              ) : (
+              report.source === 'scrapper' && Number(report.confidence_level) >= 0 ? (
                 <MissingCard
                   key={report.id}
                   {...report}
                   onClick={() => {/* handle details modal if needed */}}
+                />
+              ) : (
+                <MissingCardAdmin
+                  key={report.id}
+                  {...report}
+                  onClick={() => {/* handle details modal if needed */}}
+                  onAccept={() => handleAccept(report)}
+                  onDecline={() => handleDecline(report)}
                 />
               )
             )}

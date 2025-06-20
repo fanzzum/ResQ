@@ -21,9 +21,13 @@ import AdminProfile from "./components/AdminProfile"
 import MissingCardAdmin from "./components/MissingCardAdmin"
 import MapList from "./components/MapList"
 import ChatApp from "./components/ChatApp"
+
 function App() {
   return (
     <>
+
+
+    
       <Navbar />
       <Routes>
         <Route path="/" element={
@@ -50,6 +54,7 @@ function App() {
 
       </Routes>
       <Footer/>
+
     </>
   )
 }

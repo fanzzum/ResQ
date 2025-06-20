@@ -62,21 +62,30 @@ const ReportScreen = () => {
     fetchReports()
   }, [navigate])
 
-  // Filter reports based on search term only (show all reports)
+  // Filter reports based on your new criteria and search term
   const filteredReports = reports.filter(report => {
+    // Only show if (scrapper & confidence > 0.5) OR approved:true
+    const isScrapperWithConfidence =
+      report.source === 'scrapper' &&
+      Number(report.confidence_level) >= 0.5
+
+    const isApproved = report.approved === true
+
+    // Search term filter
     const term = searchTerm.toLowerCase()
-    return (
+    const matchesSearch =
       report.name?.toLowerCase().includes(term) ||
       report.last_seen_location?.toLowerCase().includes(term) ||
       report.reporter_name?.toLowerCase().includes(term)
-    )
+
+    return (isScrapperWithConfidence || isApproved) && matchesSearch
   })
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
 
   return (
-    <div className='bg-white w-full h-full p-15 font-inter relative'>
+    <div className='bg-white w-full h-full p-15  font-inter relative'>
       {/* Header */}
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
@@ -111,7 +120,7 @@ const ReportScreen = () => {
           onClick={() => setSelectedReport(null)}
         >
           <div
-            className="bg-[#ffffff70] rounded-[57px] max-h-[90vh] overflow-y-auto"
+            className="bg-[#ffffff70] rounded-[57px] max-h-[75vh] overflow-y-auto scrollbar-none "
             onClick={(e) => e.stopPropagation()}
           >
             <MissingCardDetails data={selectedReport} />

@@ -26,7 +26,8 @@ const MissingCardDetails = ({ data }) => {
   }
 
   return (
-    <div className="bg-[#94949495] rounded-[3.5rem] p-12 flex flex-col gap-10 max-w-4xl w-full max-h-[90vh] overflow-y-auto font-inter">
+    <div className="max-h-[100vh] overflow-hidden bg-[#94949495] rounded-[3.5rem] p-12 flex flex-col gap-10 max-w-4xl w-full font-inter">
+
       {/* Reporter Section */}
       <div className="flex gap-10 p-6">
         <img
@@ -70,7 +71,7 @@ const MissingCardDetails = ({ data }) => {
             <div>Contact</div><div>:</div><div>{reporter_contact || 'Unknown'}</div>
             <div>Organization</div><div>:</div><div>{reporter_location || 'Unknown'}</div>
             <div>Found at</div><div>:</div><div>{last_seen_location}</div>
-            <div>Time</div><div>:</div><div>{new Date(last_seen_datetime).toLocaleString()}</div>
+            <div className='mp-8'>Time</div><div>:</div><div>{new Date(last_seen_datetime).toLocaleString()}</div>
           </div>
         </div>
       </div>
