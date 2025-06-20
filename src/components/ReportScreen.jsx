@@ -10,6 +10,7 @@ const ReportScreen = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedReport, setSelectedReport] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -61,6 +62,16 @@ const ReportScreen = () => {
     fetchReports()
   }, [navigate])
 
+  // Filter reports based on search term
+  const filteredReports = reports.filter((report) => {
+    const term = searchTerm.toLowerCase()
+    return (
+      report.name?.toLowerCase().includes(term) ||
+      report.last_seen_location?.toLowerCase().includes(term) ||
+      report.reporter_name?.toLowerCase().includes(term)
+    )
+  })
+
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
 
@@ -69,19 +80,21 @@ const ReportScreen = () => {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
-        <div className='flex items-center'>
+        <div className='flex items-center relative'>
           <input
             className='bg-[#9F9F9F] w-74 pl-13 h-12 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[24px]'
             placeholder='search'
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
           />
-          <img src={search} className='absolute ml-4 w-7' alt="Search" />
+          <img src={search} className='absolute left-4 w-7' alt="Search" />
         </div>
       </div>
 
       {/* Cards Grid */}
       <div className="container mx-auto m-5">
         <div className="grid grid-cols-2 gap-20">
-          {reports.map((report) => (
+          {filteredReports.map((report) => (
             <MissingCard
               key={report.id}
               {...report}

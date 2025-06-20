@@ -9,6 +9,7 @@ const MissingCard = ({
   last_seen_location,
   last_seen_datetime,
   photo_url1,
+  confidence_level,
   onClick, // for "View Details"
 }) => {
   const formatDate = (dateString) => {
@@ -17,6 +18,12 @@ const MissingCard = ({
     const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24))
     return diffInDays === 0 ? 'Reported today' : `Reported ${diffInDays} day(s) ago`
   }
+
+  // Format confidence as percentage or fallback
+  const confidenceText =
+    confidence_level !== null && confidence_level !== undefined
+      ? `${Math.round(Number(confidence_level) * 100)}% confidence`
+      : ''
 
   return (
     <div className="flex p-15 gap-14 font-inter bg-[#D9D9D9] w-162 h-fit rounded-[10px] shadow-md">
@@ -47,7 +54,7 @@ const MissingCard = ({
           <div className="text-right">:</div>
           <div>{last_seen_location}</div>
 
-          <div>50% confidence</div>
+          <div>{confidenceText}</div>
           <button
             className="font-[200] italic text-[13px] underline"
             onClick={onClick}

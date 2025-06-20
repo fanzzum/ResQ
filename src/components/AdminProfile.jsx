@@ -2,38 +2,65 @@ import React, { useEffect, useState } from 'react'
 import avatar from '../assets/icons/avatar.png'
 import search from '../assets/icons/search.png'
 import axios from 'axios'
+import MissingCard from './MissingCard'
+import MissingCardAdmin from './MissingCardAdmin'
 
 const AdminProfile = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
     phone: '',
+    role: '',
   })
+  const [reports, setReports] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    const fetchUser = async () => {
+    // Get user info from localStorage
+    const userInfo = JSON.parse(localStorage.getItem('user'))
+    if (userInfo) {
+      setUser({
+        name: userInfo.first_name || userInfo.username || '',
+        email: userInfo.email || '',
+        phone: userInfo.phone || '',
+        role: userInfo.role || '', // Make sure role is available
+      })
+    }
+    // Fetch reports
+    const fetchReports = async () => {
       try {
         const token = localStorage.getItem('access')
         if (!token) return
-
-        // This endpoint expects a POST with credentials to return user info.
-        // If you already have the user info from login, you can store it in localStorage and use it here instead.
-        // Otherwise, you may need to use a "me" endpoint if available.
-        // For demo, let's assume you have the user info in localStorage after login:
-        const userInfo = JSON.parse(localStorage.getItem('user'))
-        if (userInfo) {
-          setUser({
-            name: userInfo.first_name || userInfo.username || '',
-            email: userInfo.email || '',
-            phone: userInfo.phone || '', // If phone is not in user, leave blank
-          })
-        }
+        const response = await axios.get(
+          'https://xylem-api.ra-physics.space/administrator/missing-reports/',
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        setReports(response.data.results)
+        setLoading(false)
       } catch (err) {
-        console.error('Failed to fetch user info:', err)
+        setError('Failed to fetch reports')
+        setLoading(false)
       }
     }
-    fetchUser()
+    fetchReports()
   }, [])
+
+  // Filter reports based on search term
+  const filteredReports = reports.filter((report) => {
+    const term = searchTerm.toLowerCase()
+    return (
+      report.name?.toLowerCase().includes(term) ||
+      report.last_seen_location?.toLowerCase().includes(term) ||
+      report.reporter_name?.toLowerCase().includes(term)
+    )
+  })
 
   return (
     <div className='w-full h-full bg-white p-15 gap-10 flex flex-col inter'>
@@ -66,13 +93,44 @@ const AdminProfile = () => {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
-        <div className='flex items-center'>
+        <div className='flex items-center relative'>
           <input
             className='bg-[#9F9F9F] w-74 pl-13 h-12 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[24px]'
             placeholder='search'
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
           />
-          <img src={search} className='absolute ml-4 w-7' alt="Search" />
+          <img src={search} className='absolute left-4 w-7' alt="Search" />
         </div>
+      </div>
+
+      {/* Reports Grid */}
+      <div className="container mx-auto m-5">
+        {loading ? (
+          <div className="text-center p-4">Loading...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 p-4">{error}</div>
+        ) : (
+          <div className="grid grid-cols-2 gap-20">
+            {filteredReports.map((report) =>
+              user.role === 'ADMIN' ? (
+                <MissingCardAdmin
+                  key={report.id}
+                  {...report}
+                  onClick={() => {/* handle details modal if needed */}}
+                  onAccept={() => {/* handle accept logic */}}
+                  onDecline={() => {/* handle decline logic */}}
+                />
+              ) : (
+                <MissingCard
+                  key={report.id}
+                  {...report}
+                  onClick={() => {/* handle details modal if needed */}}
+                />
+              )
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
