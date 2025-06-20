@@ -71,7 +71,7 @@ const MissingCardDetails = ({ data }) => {
             <div>Contact</div><div>:</div><div>{reporter_contact || 'Unknown'}</div>
             <div>Organization</div><div>:</div><div>{reporter_location || 'Unknown'}</div>
             <div>Found at</div><div>:</div><div>{last_seen_location}</div>
-            <div className='mp-8'>Time</div><div>:</div><div>{new Date(last_seen_datetime).toLocaleString()}</div>
+            <div>Time</div><div>:</div><div>{new Date(last_seen_datetime).toLocaleString()}</div>
           </div>
         </div>
       </div>

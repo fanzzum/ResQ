@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import React, { useState, useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import search from '../assets/icons/search.png'
 import axios from 'axios'
 import MapList from './MapList'
+import MissingCardDetails from './MissingCardDetails'
 
 const icon = new L.Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
@@ -17,6 +18,9 @@ const MapViewScreen = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedReport, setSelectedReport] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [highlightedId, setHighlightedId] = useState(null)
+  const mapRef = useRef(null)
 
   useEffect(() => {
     const fetchReportsAndGeocode = async () => {
@@ -51,7 +55,8 @@ const MapViewScreen = () => {
               id: report.id,
               position: [lat, lon],
               label: report.name || report.label || address,
-             }
+              report,
+            }
           })
         )
 
@@ -77,6 +82,52 @@ const MapViewScreen = () => {
     setSelectedReport(null)
   }
 
+  // Filtered reports for search
+  const filteredReports = React.useMemo(() => {
+    if (!searchTerm) return reports
+    const term = searchTerm.toLowerCase()
+    // Find all matches, but put the best match at the top
+    const matches = reports.filter(
+      r =>
+        r.name?.toLowerCase().includes(term) ||
+        r.last_seen_location?.toLowerCase().includes(term) ||
+        r.reporter_name?.toLowerCase().includes(term)
+    )
+    if (matches.length === 0) return reports
+    // Move the first match to the top
+    const firstMatch = matches[0]
+    return [firstMatch, ...reports.filter(r => r.id !== firstMatch.id)]
+  }, [reports, searchTerm])
+
+  // When search is submitted, fly to marker and highlight in list
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (!searchTerm) return
+    const term = searchTerm.toLowerCase()
+    const match = markers.find(
+      m =>
+        m.report.name?.toLowerCase().includes(term) ||
+        m.report.last_seen_location?.toLowerCase().includes(term) ||
+        m.report.reporter_name?.toLowerCase().includes(term)
+    )
+    if (match && mapRef.current) {
+      mapRef.current.flyTo(match.position, 14, { duration: 1.5 })
+      setHighlightedId(match.id)
+      // Optionally, scroll MapList to top (handled by putting match at top)
+    } else {
+      setHighlightedId(null)
+    }
+  }
+
+  // For MapContainer ref
+  function SetMapRef() {
+    const map = useMap()
+    useEffect(() => {
+      mapRef.current = map
+    }, [map])
+    return null
+  }
+
   if (loading) return <div className="text-center p-4">Loading map data...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
 
@@ -85,13 +136,15 @@ const MapViewScreen = () => {
       {/* Header */}
       <div className="w-full h-[90px] bg-[#2D5D7C] flex px-7 justify-between items-center z-10">
         <p className="font-[800] text-[40px] text-white">MAP VIEW</p>
-        <div className="flex items-center relative">
+        <form className="flex items-center relative" onSubmit={handleSearch}>
           <input
             className="bg-[#9F9F9F] w-72 pl-12 h-11 rounded-[10px] placeholder:text-white placeholder:font-[400] placeholder:text-[18px]"
             placeholder="Search"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
           />
           <img src={search} className="absolute left-3 top-2.5 w-6" alt="search icon" />
-        </div>
+        </form>
       </div>
 
       {/* Map with absolute MapList on top */}
@@ -101,6 +154,7 @@ const MapViewScreen = () => {
           zoom={7}
           className="w-full h-full z-0"
         >
+          <SetMapRef />
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
@@ -113,7 +167,11 @@ const MapViewScreen = () => {
         </MapContainer>
         {/* Absolute MapList */}
         <div className="absolute top-8 right-8 w-96 max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 z-20 bg-transparent bg-opacity-90 rounded-lg shadow-lg">
-          <MapList reports={reports} onViewDetails={handleViewDetails} />
+          <MapList
+            reports={filteredReports}
+            onViewDetails={handleViewDetails}
+            highlightedId={highlightedId}
+          />
         </div>
       </div>
 
@@ -124,7 +182,7 @@ const MapViewScreen = () => {
           onClick={handleCloseDetails}
         >
           <div
-            className="  rounded-[3.5rem] p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="rounded-[3.5rem] p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
             onClick={e => e.stopPropagation()}
           >
             <button
