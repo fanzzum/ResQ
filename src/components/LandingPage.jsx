@@ -91,7 +91,7 @@ const LandingPage = () => {
 
           <motion.img
             src={background}
-            className="absolute w-full scale-150"
+            className="absolute w-full  scale-150"
             style={{ scale }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
@@ -102,11 +102,11 @@ const LandingPage = () => {
 
           <motion.img
             src={bgwater}
-            className="absolute w-full bottom-5 z-0"
+            className="absolute w-full  bottom-5 z-0"
             style={{
               scaleX: 1,
               scaleY: 1.5,
-              opacity: useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 0.3, 1]),
+              opacity: useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 0.7, 1]),
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
