@@ -12,6 +12,7 @@ import HelpStartsWithaTap from '../components/HelpStartsWithATap'
 import HowToReport from './HowToReport'
 import SdgMeet from './SdgMeet'
 import RestLanding from './RestLanding'
+
 const LandingPage = () => {
   const navigate = useNavigate()
   const scrollRef = useRef(null)
@@ -24,6 +25,7 @@ const LandingPage = () => {
 
   const scale = useTransform(scrollYProgress, [0, 0.08, 1], [0.9, 0.85, 0.7])
   const y = useTransform(scrollYProgress, [0, 0.08, 1], [0, 30, 100])
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.6,0.8,1], [1, 0.9, 0.2,0])
 
   const boatX = useTransform(scrollYProgress, [0.7, 1], ['-100%', '50%'])
   const boatOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1])
@@ -34,7 +36,7 @@ const LandingPage = () => {
 
   const askAiOpacity = useTransform(scrollYProgress, [0.8, 0.9], [0, 1])
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     setCanInteract(latest > 0.85)
   })
 
@@ -54,6 +56,17 @@ const LandingPage = () => {
     <div className="relative w-full">
       <div ref={scrollRef} className="relative h-[600vh]">
         <div className="sticky top-0 h-screen overflow-hidden">
+          {/* --- Heading text that fades out --- */}
+          <motion.div
+            className="w-full flex justify-center items-center absolute top-50 left-0 z-10 pointer-events-none"
+            style={{ opacity: headingOpacity }}
+          >
+            <h1 className="font-[700] font-poppins text-3xl leading-14.5 md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#f2fbb0] drop-shadow-lg text-center px-10 mt-8">
+              ResQMap – the world’s first AI-powered<br /> platform that scrapes, verifies, and maps every<br /> missing person report online, giving rescuers<br /> real-time, intelligent access to critical data.
+            </h1>
+          </motion.div>
+
+          {/* --- Animated elements --- */}
           <motion.img
             src={waveDark}
             className="absolute scale-110 w-full z-30 top-25 cursor-grab"
@@ -64,6 +77,7 @@ const LandingPage = () => {
             transition={{ duration: 1, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
+
           <motion.img
             src={waveLight}
             className="absolute scale-110 w-full z-20 top-30 cursor-grab"
@@ -74,6 +88,7 @@ const LandingPage = () => {
             transition={{ duration: 1, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
+
           <motion.img
             src={background}
             className="absolute w-full scale-150"
@@ -84,6 +99,7 @@ const LandingPage = () => {
             transition={{ duration: 3, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
+
           <motion.img
             src={bgwater}
             className="absolute w-full bottom-5 z-0"
@@ -98,6 +114,7 @@ const LandingPage = () => {
             transition={{ duration: 3, ease: [1, 0, 0, 1] }}
             whileTap={{ cursor: 'grabbing' }}
           />
+
           <motion.img
             src={sun}
             className="absolute z-30 w-48 bottom-130"
@@ -112,6 +129,7 @@ const LandingPage = () => {
               ease: [0.42, 0.02, 0.63, 0.97],
             }}
           />
+
           <motion.div
             className="relative z-50 top-50"
             style={askAiStyle}
@@ -119,6 +137,7 @@ const LandingPage = () => {
           >
             <AskAi />
           </motion.div>
+
           <motion.img
             src={boat}
             className="absolute z-40 w-[681px] bottom-0"
@@ -134,11 +153,11 @@ const LandingPage = () => {
           />
         </div>
       </div>
-      <HelpStartsWithaTap />
-      <HowToReport/>
-      <SdgMeet/>
-      <RestLanding/>
 
+      <HelpStartsWithaTap />
+      <HowToReport />
+      <SdgMeet />
+      <RestLanding />
     </div>
   )
 }
