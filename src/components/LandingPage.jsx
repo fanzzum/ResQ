@@ -25,7 +25,7 @@ const LandingPage = () => {
 
   const scale = useTransform(scrollYProgress, [0, 0.08, 1], [0.9, 0.85, 0.7])
   const y = useTransform(scrollYProgress, [0, 0.08, 1], [0, 30, 100])
-  const headingOpacity = useTransform(scrollYProgress, [0, 0.6,0.8,1], [1, 0.9, 0.2,0])
+  const headingOpacity = useTransform(scrollYProgress, [0,0.2, 0.6,0.8,1], [0,1, 0.9, 0.2,0])
 
   const boatX = useTransform(scrollYProgress, [0.7, 1], ['-100%', '50%'])
   const boatOpacity = useTransform(scrollYProgress, [0.7, 1], [0, 1])
@@ -34,7 +34,7 @@ const LandingPage = () => {
   const sunY = useTransform(scrollYProgress, [0.9, 1], [0, -50])
   const sunOpacity = useTransform(scrollYProgress, [0.9, 1], [0, 1])
 
-  const askAiOpacity = useTransform(scrollYProgress, [0.8, 0.9], [0, 1])
+  const askAiOpacity = useTransform(scrollYProgress, [0.75,0.85, 0.95], [0, 1,1])
 
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     setCanInteract(latest > 0.85)
@@ -58,7 +58,7 @@ const LandingPage = () => {
         <div className="sticky top-0 h-screen overflow-hidden">
           {/* --- Heading text that fades out --- */}
           <motion.div
-            className="w-full flex justify-center items-center absolute top-50 left-0 z-10 pointer-events-none"
+            className="w-full flex justify-center items-center absolute top-75 left-0 z-10 pointer-events-none"
             style={{ opacity: headingOpacity }}
           >
             <h1 className="font-[700] font-poppins text-3xl leading-14.5 md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#f2fbb0] drop-shadow-lg text-center px-10 mt-8">
