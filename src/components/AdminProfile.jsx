@@ -120,6 +120,28 @@ const AdminProfile = () => {
     }
   }
 
+  // Delete handler (DELETE request)
+  const handleDelete = async (report) => {
+    if (!window.confirm('Are you sure you want to delete this report?')) return
+    try {
+      const token = localStorage.getItem('access')
+      await axios.delete(
+        `https://xylem-api.ra-physics.space/administrator/missing-reports/?id=${report.id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          data: report, // send report info in body if required
+        }
+      )
+      // Remove the deleted report from the list
+      setReports(prev => prev.filter(r => r.id !== report.id))
+    } catch (err) {
+      alert('Failed to delete report')
+    }
+  }
+
   // Filter reports based on dropdown
   const filteredByView = reports.filter(report => {
     if (view === 'approved') return report.approved === true
@@ -138,6 +160,9 @@ const AdminProfile = () => {
   })
 
   // Pagination controls
+  const PAGE_SIZE = 6 // Make sure this matches your backend page size
+  const totalPages = Math.ceil(count / PAGE_SIZE)
+
   const handleNext = () => {
     if (nextPage) fetchReports(nextPage, currentPage + 1)
   }
@@ -207,22 +232,30 @@ const AdminProfile = () => {
           <>
             <div className="grid grid-cols-2 gap-20">
               {filteredReports.map((report) =>
-                report.approved === true ? (
-                  <MissingCard
-                    key={report.id}
-                    {...report}
-                    onClick={() => setSelectedReport(report)}
-                  />
-                ) : (
-                  <MissingCardAdmin
-                    key={report.id}
-                    {...report}
-                    onClick={() => setSelectedReport(report)}
-                    onAccept={view === 'unapproved' ? () => handleAccept(report) : null}
-                    onDecline={null}
-                    declineLabel="Declined"
-                  />
-                )
+                <div key={report.id} className="relative">
+                  {/* Delete button in the top-right corner */}
+                  <button
+                    onClick={() => handleDelete(report)}
+                    className="absolute top-2 right-2 z-10 bg-red-600 hover:bg-red-800 text-white rounded-[10px] w-15 h-8 flex items-center justify-center shadow"
+                    title="Delete report"
+                  >
+                    delete
+                  </button>
+                  {report.approved === true ? (
+                    <MissingCard
+                      {...report}
+                      onClick={() => setSelectedReport(report)}
+                    />
+                  ) : (
+                    <MissingCardAdmin
+                      {...report}
+                      onClick={() => setSelectedReport(report)}
+                      onAccept={view === 'unapproved' ? () => handleAccept(report) : null}
+                      onDecline={null}
+                      declineLabel="Declined"
+                    />
+                  )}
+                </div>
               )}
             </div>
             {/* Pagination Controls */}
@@ -235,7 +268,7 @@ const AdminProfile = () => {
                 Previous
               </button>
               <span className="font-inter text-lg">
-                Page {currentPage} {count ? `/ ${Math.ceil(count / reports.length || 1)}` : ''}
+                Page {currentPage} {totalPages ? `/ ${totalPages}` : ''}
               </span>
               <button
                 className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"

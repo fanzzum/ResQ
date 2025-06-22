@@ -129,7 +129,17 @@ const MapViewScreen = () => {
   }
 
   if (loading) return <div className="text-center p-4">Loading map data...</div>
-  if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
+  if (error) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-lg shadow-lg font-inter text-xl flex items-center gap-4">
+        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01" />
+        </svg>
+        <span>Map is currently under maintenance</span>
+      </div>
+    </div>
+  )
 
   return (
     <div className="w-full h-screen flex flex-col font-inter relative">

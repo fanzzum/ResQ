@@ -4,27 +4,24 @@ import MissingCard from './MissingCard'
 import MissingCardDetails from './MissingCardDetails'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import avatar from '../assets/icons/avatar.png'
+
+const PAGE_SIZE = 6
 
 const ReportScreen = () => {
-  const [reports, setReports] = useState([])
+  const [allReports, setAllReports] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedReport, setSelectedReport] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [nextPage, setNextPage] = useState(null)
-  const [prevPage, setPrevPage] = useState(null)
-  const [count, setCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10) // adjust if needed
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetchReports(null, 1)
+    fetchAllReports()
     // eslint-disable-next-line
   }, [])
 
-  const fetchReports = async (url = null, page = 1) => {
+  const fetchAllReports = async () => {
     const token = localStorage.getItem('access')
     if (!token) {
       navigate('/login')
@@ -33,20 +30,27 @@ const ReportScreen = () => {
     setLoading(true)
     setError(null)
     try {
-      let apiUrl =
-        url ||
-        `https://xylem-api.ra-physics.space/administrator/missing-reports/?p=${page}`
+      let apiUrl = `https://xylem-api.ra-physics.space/administrator/missing-reports/`
       const response = await axios.get(apiUrl, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       })
-      setReports(response.data.results)
-      setNextPage(response.data.next)
-      setPrevPage(response.data.previous)
-      setCount(response.data.count)
-      setCurrentPage(page)
+      // If paginated, fetch all pages
+      let results = response.data.results
+      let next = response.data.next
+      while (next) {
+        const nextRes = await axios.get(next, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        results = results.concat(nextRes.data.results)
+        next = nextRes.data.next
+      }
+      setAllReports(results)
       setLoading(false)
     } catch (err) {
       const status = err.response?.status
@@ -60,8 +64,8 @@ const ReportScreen = () => {
     }
   }
 
-  // Filter reports based on your new criteria and search term
-  const filteredReports = reports.filter(report => {
+  // Filter and paginate in frontend
+  const filteredReports = allReports.filter(report => {
     // Only show if (scrapper & confidence > 0.5) OR approved:true
     const isScrapperWithConfidence =
       report.source === 'scrapper' &&
@@ -79,18 +83,29 @@ const ReportScreen = () => {
     return (isScrapperWithConfidence || isApproved) && matchesSearch
   })
 
+  const totalPages = Math.ceil(filteredReports.length / PAGE_SIZE)
+  const paginatedReports = filteredReports.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  )
+
   const handleNext = () => {
-    if (nextPage) fetchReports(nextPage, currentPage + 1)
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1)
   }
   const handlePrev = () => {
-    if (prevPage) fetchReports(prevPage, currentPage - 1)
+    if (currentPage > 1) setCurrentPage(currentPage - 1)
   }
+
+  // Reset to page 1 if search/filter changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, allReports.length])
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-center text-red-500 p-4">Error: {error}</div>
 
   return (
-    <div className='bg-white w-full h-full p-15  font-inter relative'>
+    <div className='bg-white w-full h-full p-15 font-inter relative'>
       {/* Header */}
       <div className='flex items-center justify-between'>
         <p className='text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0] inline-block font-[700] text-[60px]'>MISSING REPORTS</p>
@@ -108,7 +123,7 @@ const ReportScreen = () => {
       {/* Cards Grid */}
       <div className="container mx-auto m-5">
         <div className="grid grid-cols-2 gap-20">
-          {filteredReports.map((report) => (
+          {paginatedReports.map((report) => (
             <MissingCard
               key={report.id}
               {...report}
@@ -121,17 +136,17 @@ const ReportScreen = () => {
           <button
             className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
             onClick={handlePrev}
-            disabled={!prevPage}
+            disabled={currentPage === 1}
           >
             Previous
           </button>
           <span className="font-inter text-lg">
-            Page {currentPage} {count ? `/ ${Math.ceil(count / (reports.length || 1))}` : ''}
+            Page {currentPage} {totalPages ? `/ ${totalPages}` : ''}
           </span>
           <button
             className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
             onClick={handleNext}
-            disabled={!nextPage}
+            disabled={currentPage === totalPages || totalPages === 0}
           >
             Next
           </button>

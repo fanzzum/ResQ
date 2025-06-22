@@ -20,10 +20,14 @@ const MissingCard = ({
   }
 
   // Format confidence as percentage or fallback
-  const confidenceText =
-    confidence_level !== null && confidence_level !== undefined
-      ? `${Math.round(Number(confidence_level) * 100)}% confidence`
-      : ''
+  let confidenceText = ''
+  if (confidence_level !== null && confidence_level !== undefined && confidence_level !== '') {
+    let conf = Number(confidence_level)
+    // If confidence is > 1, assume it's already a percent (like 100.00)
+    if (conf > 1) conf = Math.round(conf)
+    else conf = Math.round(conf * 100)
+    confidenceText = `${conf}% confidence`
+  }
 
   return (
     <div className="flex p-15 gap-14 font-inter bg-[#D9D9D9] w-162 h-fit rounded-[10px] shadow-md">
