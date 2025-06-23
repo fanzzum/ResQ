@@ -104,8 +104,8 @@ const RestLanding = () => {
 
 
     <div className='w-full max-w-[2600px] mx-auto min-h-[300px] flex gap-15 flex-col md:flex-row items-center bg-[linear-gradient(180deg,#FFFFFF,#C8DEEB,#AACEE5,#9EC7D9)] px-4 md:px-10 xl:px-24 py-16 md:py-24 xl:py-32'>
-      <img src={chatbot} className='w-40 md:w-64 xl:w-96 h-auto'/>
-      <div className='flex flex-col text-left w-full md:w-2/3 xl:w-1/2 md:ml-16 pt-6 gap-8 md:gap-10 xl:gap-12'>
+      <img src={chatbot} className='w-80 md:w-104 xl:w-136 h-auto'/>
+      <div className='flex flex-col text-left w-full md:w-2/3 xl:w-1/2 md:ml-16 pt-6 gap-6 md:gap-10 xl:gap-12'>
         <p className='font-inter font-bold text-3xl md:text-5xl xl:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0]'>
           Now Available CHATBOT
         </p>
@@ -118,9 +118,9 @@ const RestLanding = () => {
       </div>
     </div>
 
-    <div className='w-full max-w-[2600px] mx-auto bg-[#9FC7D9] flex flex-col gap-20 md:gap-30 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
-      <p className='font-inter font-bold text-3xl md:text-5xl xl:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#606060] to-[#9F7878]'>
-        Every Report Is a Life. Every Ping Is a Chance.
+    <div className='w-full max-w-[2700px] mx-auto bg-[#9FC7D9] flex flex-col gap-8 md:gap-15 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
+      <p className='font-inter font-bold text-5xl md:text-7xl xl:text-[90px] text-transparent bg-clip-text bg-gradient-to-r from-[#606060] to-[#9F7878]'>
+        Every Report Is a Life.<br/> Every Ping Is a Chance.
       </p>
       <p className='font-inter font-bold text-base md:text-xl xl:text-2xl text-white'>
         Behind every dot on the map is a family waiting, a voice unheard, a life that matters. At ResQMap, we believe technology should do more than connect us — it should help us care.

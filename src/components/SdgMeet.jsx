@@ -41,7 +41,7 @@ const SdgMeet = () => {
         amount: 0.8
       }}
       transition={{ duration: 0.5 }}
-      className='w-full max-w-[1920px] mx-auto bg-[linear-gradient(0deg,#2D5D7C,#264D64,#336887)] flex flex-col gap-8 md:gap-14 xl:gap-18 px-4 md:px-10 xl:px-24 py-8'
+      className='w-full max-w-[1920px] h-[120vh] mx-auto bg-[linear-gradient(0deg,#2D5D7C,#264D64,#336887)] flex flex-col gap-8 items-center justify-center md:gap-14 xl:gap-18 px-4 md:px-10 xl:px-24 py-8'
     >
       <p className='font-poppins font-[700] text-3xl md:text-5xl xl:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-[#f8ffce] via-[#eed73e] to-[#eccd05] text-center'>
         SDGs we meet

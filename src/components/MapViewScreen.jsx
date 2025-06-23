@@ -25,14 +25,9 @@ const MapViewScreen = () => {
   useEffect(() => {
     const fetchReportsAndGeocode = async () => {
       try {
-        const token = localStorage.getItem('access')
-        if (!token) throw new Error('No auth token')
-
+        // No token needed
         const response = await axios.get(
-          'https://xylem-api.ra-physics.space/administrator/missing-reports/',
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          'https://xylem-api.ra-physics.space/administrator/missing-reports/'
         )
 
         const reportsData = response.data.results
