@@ -103,7 +103,7 @@ const RestLanding = () => {
     </div>
 
 
-    <div className='w-full max-w-[2600px] mx-auto min-h-[300px] flex gap-15 flex-col md:flex-row items-center bg-[linear-gradient(180deg,#FFFFFF,#C8DEEB,#AACEE5,#9EC7D9)] px-4 md:px-10 xl:px-24 py-16 md:py-24 xl:py-32'>
+    <div className='w-full max-w-[2600px] mx-auto min-h-[300px] flex gap-15 flex-col md:flex-row items-center bg-[linear-gradient(180deg,#FFFFFF,#C8DEEB,#AACEE5,#9EC7D9)] px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48'>
       <img src={chatbot} className='w-80 md:w-104 xl:w-136 h-auto'/>
       <div className='flex flex-col text-left w-full md:w-2/3 xl:w-1/2 md:ml-16 pt-6 gap-6 md:gap-10 xl:gap-12'>
         <p className='font-inter font-bold text-3xl md:text-5xl xl:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0]'>
