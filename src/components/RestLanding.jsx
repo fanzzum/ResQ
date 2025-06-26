@@ -118,14 +118,14 @@ const RestLanding = () => {
       </div>
     </div>
 
-    <div className='w-full max-w-[2700px] mx-auto bg-[#9FC7D9] flex flex-col gap-8 md:gap-15 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
-      <p className='font-inter font-bold text-5xl md:text-7xl xl:text-[90px] text-transparent bg-clip-text bg-gradient-to-r from-[#606060] to-[#9F7878]'>
+    <div className='w-full max-w-[2700px]  mx-auto bg-[#9FC7D9] flex flex-col gap-8 md:gap-15 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
+      <p className='font-inter font-bold text-5xl md:text-7xl xl:text-[90px] text-transparent bg-clip-text bg-gradient-to-r from-[#606060] to-[#9F7878] text-center leading-tight xl:leading-[1.15]'>
         Every Report Is a Life.<br/> Every Ping Is a Chance.
       </p>
-      <p className='font-inter font-bold text-base md:text-xl xl:text-2xl text-white'>
+      <p className='font-inter font-bold text-base md:text-xl xl:text-2xl text-white text-center'>
         Behind every dot on the map is a family waiting, a voice unheard, a life that matters. At ResQMap, we believe technology should do more than connect us — it should help us care.
       </p>
-      <p className='font-inter font-bold text-lg md:text-2xl xl:text-3xl text-white'>
+      <p className='font-inter font-bold text-lg md:text-2xl xl:text-3xl text-center text-white'>
         Join the movement. <span className='text-[#7A6969]'>Report.</span> <span className='text-[#7A6969]'>Respond.</span> <span className='text-[#7A6969]'>Reunite.</span>
       </p>
     </div>
