@@ -125,10 +125,13 @@ const MissingReport = () => {
   }
 
   return (
-    <div className='flex justify-center w-[1286px] h-[1600px] rounded-[38px] bg-[#e8e8e8] pt-10 overflow-y-auto' style={{ boxShadow: 'inset -6px -7px 4px 0px #00000040' }}>
-      <div className='flex flex-col flex-1 p-10 gap-8'>
-        <p className='font-[700] text-[32px] font-poppins text-[#807B7B]'>BASIC INFORMATION</p>
-        <div className='font-[300] text-[24px] font-poppins flex flex-col gap-5'>
+    <div
+      className='flex justify-center w-full max-w-[1486px] h-auto min-h-[900px] md:h-[1600px] rounded-[38px] bg-[#e8e8e8] p-10 overflow-y-auto'
+      style={{ boxShadow: 'inset -6px -7px 4px 0px #00000040' }}
+    >
+      <div className='flex flex-col flex-1 p-4 md:p-10 gap-8'>
+        <p className='font-[700] text-[24px] md:text-[32px] font-poppins text-[#807B7B]'>BASIC INFORMATION</p>
+        <div className='font-[300] text-[18px] md:text-[24px] font-poppins flex flex-col gap-5'>
           <p>Your name</p>
           <input name='reporter_name' value={formData.reporter_name} onChange={handleChange} className='input-style' />
           <p>Your Mobile Number</p>
@@ -136,13 +139,13 @@ const MissingReport = () => {
           <p>Your Location</p>
           <input name='reporter_location' value={formData.reporter_location} onChange={handleChange} className='input-style' />
           <p>Additional Note</p>
-          <textarea name='note' value={formData.note} onChange={handleChange} className='input-style h-85 resize-y p-2' rows={5} />
+          <textarea name='note' value={formData.note} onChange={handleChange} className='input-style h-32 md:h-85 resize-y p-2' rows={5} />
         </div>
       </div>
 
-      <div className='flex flex-col flex-1 p-10 gap-8'>
-        <p className='font-[700] text-[32px] font-poppins text-[#807B7B]'>MISSING PERSON INFORMATION</p>
-        <div className='font-[300] text-[24px] font-poppins flex flex-col gap-5'>
+      <div className='flex flex-col flex-1 p-4 md:p-10 gap-8'>
+        <p className='font-[700] text-[24px] md:text-[32px] font-poppins text-[#807B7B]'>MISSING PERSON INFORMATION</p>
+        <div className='font-[300] text-[18px] md:text-[24px] font-poppins flex flex-col gap-5'>
           <p>Name</p>
           <input name='name' value={formData.name} onChange={handleChange} className='input-style' />
           <p>Age</p>
@@ -159,24 +162,27 @@ const MissingReport = () => {
           <input type='time' name='last_seen_datetime_time' value={formData.last_seen_datetime_time} onChange={handleChange} className='input-style' />
 
           {[1, 2, 3].map((num) => (
-            <div key={num} className='flex items-center gap-4 max-w-full'>
-              <label htmlFor={`photo_url${num}`} className='bg-white w-48 h-12 rounded-[13px] flex items-center gap-5 p-3 cursor-pointer flex-shrink-0'>
-                <img src={cam} alt='camera' className='w-7' />
-                <p>Add Photo</p>
+            <div key={num} className=' flex items-center gap-4 max-w-full'>
+              <label  htmlFor={`photo_url${num}`} className='buttonhov bg-white w-32 md:w-48 h-10 md:h-12 rounded-[13px] flex items-center gap-3 md:gap-5 p-2 md:p-3 cursor-pointer flex-shrink-0'>
+                <img src={cam} alt='camera' className='w-5 md:w-7' />
+                <p className='text-sm md:text-base'>Add Photo</p>
               </label>
               <input id={`photo_url${num}`} type='file' accept='image/*' name={`photo_url${num}`} onChange={handlePhotoChange} className='hidden' />
               {previewUrls[`photo_url${num}`] && (
                 <img
                   src={previewUrls[`photo_url${num}`]}
                   alt={`Preview ${num}`}
-                  className='w-40 h-40 object-cover rounded max-w-full flex-shrink-0'
+                  className='w-24 h-24 md:w-40 md:h-40 object-cover rounded max-w-full flex-shrink-0'
                   style={{ maxWidth: '160px' }}
                 />
               )}
             </div>
           ))}
 
-          <button onClick={handleSubmit} className='w-50 h-17 bg-[linear-gradient(0deg,#274659,#000000,#10222C)] text-white font-inter font-[500] text-[28px] rounded-[8px] ml-90 mt-6'>
+          <button
+            onClick={handleSubmit}
+            className='w-36 md:w-50 buttonhov  h-12 md:h-17 bg-[linear-gradient(0deg,#274659,#000000,#10222C)] text-white font-inter font-[500] text-[20px] md:text-[28px] rounded-[15px] ml-0 md:ml-90 mt-6'
+          >
             SUBMIT
           </button>
         </div>

@@ -47,4 +47,11 @@ body {
         transition-duration: 400ms;
 
     }
+
+    .buttonhov:hover{
+        background-color: #2c5998;
+        border-radius:20px;
+        transition-duration: 400ms;
+        transform: scale(1.2);
+    }
 }

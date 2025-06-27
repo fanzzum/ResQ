@@ -52,10 +52,25 @@ const RestLanding = () => {
 
     
 
-        <p className='font-inter z-10 font-[500] text-[24px] text-white bg-[#ffffff30] w-93 text-center rounded-[74px] shadow-neu p-5'>All inputs are funneled into a centralized queue</p>
+        <p className='font-inter z-10 font-[500] text-[24px] text-white bg-[#ffffff30] w-93 text-center rounded-[74px] shadow-neu p-5'>
+          All inputs are funneled into a centralized queue
+        </p>
+        {/* Downward arrow */}
+        <div className="w-full flex justify-center items-center my-2">
+          <svg width="100" height="100" viewBox="0 0 40 40" fill="none" className="animate-bounce" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 10V30M20 30L10 20M20 30L30 20" stroke="#FFFD8F" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
         <div className='flex'>
-        <img src={deduplication} className='w-204 '/>
-        <p className='inter font-[700] text-[32px] ml-170 text-transparent p-27 absolute bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block text-right'>Verification & Deduplication Layer</p>
+          <img src={deduplication} className='w-204 '/>
+          <p className='inter font-[700] text-[32px] ml-170 text-transparent p-27 absolute bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block text-right'>
+            Verification & Deduplication Layer
+          </p>
+        </div>
+        <div className="w-full flex justify-center items-center my-2">
+          <svg width="100" height="100" viewBox="0 0 40 40" fill="none" className="animate-bounce" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 10V30M20 30L10 20M20 30L30 20" stroke="#FFFD8F" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
 
         <div className='flex flex-col gap-6 p-4 w-232 h-113 bg-[#ffffff30] shadow-neu rounded-[74px] items-center'>
@@ -75,6 +90,11 @@ const RestLanding = () => {
           </div>
           
 
+        </div>
+        <div className="w-full flex justify-center items-center my-2">
+          <svg width="100" height="100" viewBox="0 0 40 40" fill="none" className="animate-bounce" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 10V30M20 30L10 20M20 30L30 20" stroke="#FFFD8F" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
           <p className='font-inter font-[700] text-[32px] text-transparent  bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block w-80 mr-230 text-left'>Delivery Pipeline via Web Channels</p>
         <p className='font-inter font-[600] text-[20px] bg-[#ffffff30] shadow-neu text-white w-93  h-29 flex justify-center items-center text-center rounded-[74px]'>Verified reports are deployed through:</p>
