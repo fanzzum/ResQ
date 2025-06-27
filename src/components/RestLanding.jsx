@@ -79,7 +79,7 @@ const RestLanding = () => {
           <p className='font-inter font-[700] text-[32px] text-transparent  bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block w-80 mr-230 text-left'>Delivery Pipeline via Web Channels</p>
         <p className='font-inter font-[600] text-[20px] bg-[#ffffff30] shadow-neu text-white w-93  h-29 flex justify-center items-center text-center rounded-[74px]'>Verified reports are deployed through:</p>
 
-        <div className='flex gap-15 justify-center'>
+        <div className='flex gap-15 justify-center pb-25'>
           <div className='bg-[#ffffff30] w-93 h-115 rounded-[74px] shadow-neu flex pt-19 flex-col items-center'>
             <img src={restfulAPI} className='w-80 '/>
             <p className='inter font-[700] text-[24px] text-transparent  bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] pt-8 inline-block '>RESTful APIs</p>
@@ -109,7 +109,7 @@ const RestLanding = () => {
         <p className='font-inter font-bold text-3xl md:text-5xl xl:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0]'>
           Now Available CHATBOT
         </p>
-        <p className='font-inter font-semibold text-lg md:text-2xl text-[#FF9E9E]'>
+        <p className='font-inter font-semibold text-lg md:text-2xl text-[#D04242]'>
           Your real-time assistant for reporting and tracking missing persons.
         </p>
         <p className='font-inter font-medium text-base md:text-lg text-white'>
