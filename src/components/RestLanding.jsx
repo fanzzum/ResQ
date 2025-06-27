@@ -10,7 +10,7 @@ import chatbot from '../assets/pictures/chatbot.png'
 const RestLanding = () => {
   return (
     <>
-    <div className='w-full max-w-[2600px] mx-auto min-h-screen bg-[linear-gradient(180deg,#336887,#4B84A6,#5B88A4)] flex flex-col gap-10 md:gap-16 xl:gap-20 items-center px-4 md:px-10 xl:px-24 py-8'>
+    <div className='w-full max-w-[4000px] mx-auto min-h-screen bg-[linear-gradient(180deg,#336887,#4B84A6,#5B88A4)] flex flex-col gap-10 md:gap-16 xl:gap-20 items-center px-4 md:px-10 xl:px-24 py-8'>
         <div className='flex flex-col md:flex-row gap-6 md:gap-10 xl:gap-15 justify-center w-full'>
           <div className='flex-1 min-w-[180px] max-w-[320px] h-36 md:h-44 xl:h-50 bg-[linear-gradient(180deg,#234A61,#678AA0)] rounded-[10px] border border-[#ffffff40] flex flex-col justify-center items-center gap-2 md:gap-4 xl:gap-5'>
             <p className='font-poppins font-bold text-lg md:text-xl xl:text-2xl text-white'>Missing Reports</p>
@@ -103,7 +103,7 @@ const RestLanding = () => {
     </div>
 
 
-    <div className='w-full max-w-[2600px] mx-auto min-h-[300px] flex gap-15 flex-col md:flex-row items-center bg-[linear-gradient(180deg,#FFFFFF,#C8DEEB,#AACEE5,#9EC7D9)] px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48'>
+    <div className='w-full max-w-[4000px] mx-auto min-h-[300px] flex gap-15 flex-col md:flex-row items-center bg-[linear-gradient(180deg,#FFFFFF,#C8DEEB,#AACEE5,#9EC7D9)] px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48'>
       <img src={chatbot} className='w-80 md:w-104 xl:w-136 h-auto'/>
       <div className='flex flex-col text-left w-full md:w-2/3 xl:w-1/2 md:ml-16 pt-6 gap-6 md:gap-10 xl:gap-12'>
         <p className='font-inter font-bold text-3xl md:text-5xl xl:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#7A6969] to-[#E0C0C0]'>
@@ -118,7 +118,7 @@ const RestLanding = () => {
       </div>
     </div>
 
-    <div className='w-full max-w-[2700px]  mx-auto bg-[#9FC7D9] flex flex-col gap-8 md:gap-15 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
+    <div className='w-full max-w-[4000px]  mx-auto bg-[#9FC7D9] flex flex-col gap-8 md:gap-15 px-4 md:px-10 xl:px-34 py-24 md:py-36 xl:py-48 h-auto'>
       <p className='font-inter font-bold text-5xl md:text-7xl xl:text-[90px] text-transparent bg-clip-text bg-gradient-to-r from-[#606060] to-[#9F7878] text-center leading-tight xl:leading-[1.15]'>
         Every Report Is a Life.<br/> Every Ping Is a Chance.
       </p>
