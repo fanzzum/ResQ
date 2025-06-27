@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 import webScrapper from '../assets/icons/webScrapper.png'
 import botIntegration from '../assets/icons/botIntegration.png'
 import manualReport from '../assets/icons/manualReport.png'
@@ -7,22 +8,72 @@ import restfulAPI from '../assets/icons/restfulAPI.png'
 import progressive from '../assets/icons/progressiveWebInterface.png'
 import responderPortal from '../assets/icons/responderPortal.png'
 import chatbot from '../assets/pictures/chatbot.png'
+
+// AnimatedCounter animates only when visible (on mount/page enter)
+const AnimatedCounter = ({ target, duration = 3500, start = false }) => {
+  const [count, setCount] = useState(0)
+  const raf = useRef()
+  const startRef = useRef()
+
+  useEffect(() => {
+    if (!start) return
+    let cancelled = false
+    const easeOut = t => 1 - Math.pow(1 - t, 3)
+    function animate(ts) {
+      if (!startRef.current) startRef.current = ts
+      const elapsed = ts - startRef.current
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = easeOut(progress)
+      const value = Math.round(eased * target)
+      setCount(value)
+      if (progress < 1 && !cancelled) {
+        raf.current = requestAnimationFrame(animate)
+      } else {
+        setCount(target)
+      }
+    }
+    raf.current = requestAnimationFrame(animate)
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(raf.current)
+      startRef.current = null
+    }
+  }, [target, duration, start])
+
+  return <span>{count}</span>
+}
+
 const RestLanding = () => {
+  // Use Intersection Observer to trigger animation when in view
+  const { ref, inView } = useInView({
+    threshold: 0.3, // adjust as needed
+    triggerOnce: true,
+  })
+
   return (
     <>
     <div className='w-full max-w-[4000px] mx-auto min-h-screen bg-[linear-gradient(180deg,#336887,#4B84A6,#5B88A4)] flex flex-col gap-10 md:gap-16 xl:gap-20 items-center px-4 md:px-10 xl:px-24 py-8'>
-        <div className='flex pt-80 md:flex-row gap-6 md:gap-10 xl:gap-15 justify-center w-full'>
+        <div
+          ref={ref}
+          className='flex pt-80 md:flex-row gap-6 md:gap-10 xl:gap-15 justify-center w-full'
+        >
           <div className='flex-1 min-w-[180px] max-w-[320px] h-36 md:h-44 xl:h-50 bg-[linear-gradient(180deg,#234A61,#678AA0)] rounded-[10px] border border-[#ffffff40] flex flex-col justify-center items-center gap-2 md:gap-4 xl:gap-5'>
             <p className='font-poppins font-bold text-lg md:text-xl xl:text-2xl text-white'>Missing Reports</p>
-            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>50</p>
+            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>
+              <AnimatedCounter target={70} start={inView} />
+            </p>
           </div>
           <div className='flex-1 min-w-[180px] max-w-[320px] h-36 md:h-44 xl:h-50 bg-[linear-gradient(180deg,#234A61,#678AA0)] rounded-[10px] border border-[#ffffff40] flex flex-col justify-center items-center gap-2 md:gap-4 xl:gap-5'>
             <p className='font-poppins font-bold text-lg md:text-xl xl:text-2xl text-white'>Rescued Reports</p>
-            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>50</p>
+            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>
+              <AnimatedCounter target={40} start={inView} />
+            </p>
           </div>
           <div className='flex-1 min-w-[180px] max-w-[320px] h-36 md:h-44 xl:h-50 bg-[linear-gradient(180deg,#234A61,#678AA0)] rounded-[10px] border border-[#ffffff40] flex flex-col justify-center items-center gap-2 md:gap-4 xl:gap-5'>
             <p className='font-poppins font-bold text-lg md:text-xl xl:text-2xl text-white'>Total User</p>
-            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>50</p>
+            <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>
+              <AnimatedCounter target={90} start={inView} />
+            </p>
           </div>
         </div>
         
