@@ -11,7 +11,7 @@ const RestLanding = () => {
   return (
     <>
     <div className='w-full max-w-[4000px] mx-auto min-h-screen bg-[linear-gradient(180deg,#336887,#4B84A6,#5B88A4)] flex flex-col gap-10 md:gap-16 xl:gap-20 items-center px-4 md:px-10 xl:px-24 py-8'>
-        <div className='flex flex-col md:flex-row gap-6 md:gap-10 xl:gap-15 justify-center w-full'>
+        <div className='flex pt-50 md:flex-row gap-6 md:gap-10 xl:gap-15 justify-center w-full'>
           <div className='flex-1 min-w-[180px] max-w-[320px] h-36 md:h-44 xl:h-50 bg-[linear-gradient(180deg,#234A61,#678AA0)] rounded-[10px] border border-[#ffffff40] flex flex-col justify-center items-center gap-2 md:gap-4 xl:gap-5'>
             <p className='font-poppins font-bold text-lg md:text-xl xl:text-2xl text-white'>Missing Reports</p>
             <p className='font-poppins font-bold text-3xl md:text-4xl xl:text-5xl text-white'>50</p>
@@ -79,7 +79,7 @@ const RestLanding = () => {
           <p className='font-inter font-[700] text-[32px] text-transparent  bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] inline-block w-80 mr-230 text-left'>Delivery Pipeline via Web Channels</p>
         <p className='font-inter font-[600] text-[20px] bg-[#ffffff30] shadow-neu text-white w-93  h-29 flex justify-center items-center text-center rounded-[74px]'>Verified reports are deployed through:</p>
 
-        <div className='flex gap-15 justify-center pb-25'>
+        <div className='flex gap-15 justify-center pb-50'>
           <div className='bg-[#ffffff30] w-93 h-115 rounded-[74px] shadow-neu flex pt-19 flex-col items-center'>
             <img src={restfulAPI} className='w-80 '/>
             <p className='inter font-[700] text-[24px] text-transparent  bg-clip-text bg-gradient-to-r from-[#ffffff] to-[#FFFD8F] pt-8 inline-block '>RESTful APIs</p>
